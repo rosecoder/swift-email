@@ -39,3 +39,10 @@ extension NavigationLink.Destination: UnsafeNodeAttributesValue {
         }
     }
 }
+
+extension NavigationLink: PrimitiveView {
+
+    func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
+        await body.renderHTML(options: options, context: context)
+    }
+}

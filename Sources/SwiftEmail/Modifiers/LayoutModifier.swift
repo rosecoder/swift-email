@@ -77,17 +77,30 @@ struct LayoutView<Content: View>: View {
         self.content = content
     }
 
-    var body: some View { noBody }
-
-    func body(backgroundStyle: AnyShapeStyle?) async -> some View {
-        await UnsafeNode(tag: "table", attributes: attributes(backgroundStyle: backgroundStyle)) {
+    func body(
+        className: ClassName?,
+        backgroundStyle: AnyShapeStyle?,
+        borderStyle: AnyShapeStyle?,
+        options: HTMLRenderOptions
+    ) async -> some View {
+        await UnsafeNode(tag: "table", attributes: attributes(
+            className: className,
+            backgroundStyle: backgroundStyle,
+            borderStyle: borderStyle,
+            options: options
+        )) {
             await AnyView {
                 await content(bodyContext)
             }
         }
     }
 
-    private func attributes(backgroundStyle: AnyShapeStyle?) -> UnsafeNode<AnyView>.Attributes {
+    private func attributes(
+        className: ClassName?,
+        backgroundStyle: AnyShapeStyle?,
+        borderStyle: AnyShapeStyle?,
+        options: HTMLRenderOptions
+    ) -> UnsafeNode<AnyView>.Attributes {
         var attributes: UnsafeNode<AnyView>.Attributes = [
             "cellspacing": "0",
             "cellpadding": "0",
@@ -121,8 +134,14 @@ struct LayoutView<Content: View>: View {
         if let backgroundStyle {
             styles["background"] = backgroundStyle
         }
+        if let borderStyle {
+            styles["border"] = borderStyle
+        }
         if !styles.isEmpty {
             attributes.values["style"] = styles
+        }
+        if let className {
+            attributes.values["class"] = className.renderCSS(options: options)
         }
         return attributes
     }
@@ -167,8 +186,21 @@ extension LayoutView: PrimitiveView {
 
     func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
         var context = context
+        
         let backgroundStyle = context.renderedBackgroundStyle == context.environmentValues.backgroundStyle ? nil : context.environmentValues.backgroundStyle
         context.renderedBackgroundStyle = context.environmentValues.backgroundStyle
-        return await body(backgroundStyle: backgroundStyle).renderHTML(options: options, context: context)
+
+        let borderStyle = context.renderedBorderStyle == context.environmentValues.borderStyle ? nil : context.environmentValues.borderStyle
+        context.renderedBorderStyle = context.environmentValues.borderStyle
+
+        let className = context.renderedClassName == context.environmentValues.className ? nil : context.environmentValues.className
+        context.renderedClassName = context.environmentValues.className
+
+        return await body(
+            className: className,
+            backgroundStyle: backgroundStyle,
+            borderStyle: borderStyle,
+            options: options
+        ).renderHTML(options: options, context: context)
     }
 }

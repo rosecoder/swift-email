@@ -13,8 +13,10 @@ final class NavigationLinkTests: XCTestCase {
     }
 
     func testNavigationLinkWithButtonStyle() {
-        let view = NavigationLink(url: "https://qualtive.io/") {
-            Text("Link")
+        let view = Email {
+            NavigationLink(url: "https://qualtive.io/") {
+                Text("Link")
+            }
         }
             .buttonStyle(CustomButtonStyle())
         assertSnapshot(of: view, as: .html)
@@ -28,6 +30,8 @@ final class NavigationLinkTests: XCTestCase {
             }
             .padding(.horizontal, 40)
             .padding(.vertical, 10)
+            .border(Color.black, width: 1)
+            .border(Color.green, width: 1, when: .hover)
         }
     }
 }

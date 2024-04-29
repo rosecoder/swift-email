@@ -59,8 +59,11 @@ struct HTMLRenderContext {
     let globalStyle = GlobalStyle()
     var indentationLevel: UInt16 = 0
     var environmentValues: EnvironmentValues = .init()
+
+    var renderedClassName: ClassName?
     var renderedFont: Font = EnvironmentValues.default.font
     var renderedBackgroundStyle: AnyShapeStyle = EnvironmentValues.default.backgroundStyle
+    var renderedBorderStyle: AnyShapeStyle = EnvironmentValues.default.borderStyle
     var renderedForegroundStyle: AnyShapeStyle = EnvironmentValues.default.foregroundStyle
     var renderedTag: AnyHashable?
 

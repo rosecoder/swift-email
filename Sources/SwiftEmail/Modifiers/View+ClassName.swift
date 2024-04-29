@@ -1,23 +1,19 @@
-extension View {
+private struct ClassNameKey: EnvironmentKey {
 
-    public func unsafeClass(_ className: ClassName) -> some View {
-        ClassOverride(className: className, content: self)
+    static var defaultValue: ClassName?
+}
+
+extension EnvironmentValues {
+
+    public var className: ClassName? {
+        get { self[ClassNameKey.self] }
+        set { self[ClassNameKey.self] = newValue }
     }
 }
 
-private struct ClassOverride<Content: View>: View {
+extension View {
 
-    let className: ClassName
-    let content: Content
-}
-
-extension ClassOverride: PrimitiveView {
-
-    func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
-        await UnsafeNode(tag: "span", attributes: [
-            "class": className.renderCSS(options: options),
-        ]) {
-            content
-        }.renderRootHTML(options: options, context: context)
+    public func unsafeClass(_ className: ClassName) -> some View {
+        environment(\.className, className)
     }
 }

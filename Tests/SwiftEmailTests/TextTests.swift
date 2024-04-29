@@ -38,4 +38,46 @@ final class TextTests: XCTestCase {
             )
         }
     }
+
+    func testFontBold() async throws {
+        let html = await Text("Hello world!")
+            .font(Font.helveticaNeue.bold())
+            .renderHTML()
+        XCTAssertEqual(html, "<b style=\"font-size:16px;font-weight:700;font-family:'Helvetica Neue', Helvetica, Arial, Verdana, sans-serif\">Hello world!</b>")
+    }
+
+    func testFontItalic() async throws {
+        let html = await Text("Hello world!")
+            .font(Font.helveticaNeue.italic())
+            .renderHTML()
+        XCTAssertEqual(html, "<i style=\"font-size:16px;font-weight:400;font-family:'Helvetica Neue', Helvetica, Arial, Verdana, sans-serif;font-style:italic\">Hello world!</i>")
+    }
+
+    func testFontBoldAndItalic() async throws {
+        let html = await Text("Hello world!")
+            .font(Font.helveticaNeue.bold().italic())
+            .renderHTML()
+        XCTAssertEqual(html, "<i><b style=\"font-size:16px;font-weight:700;font-family:'Helvetica Neue', Helvetica, Arial, Verdana, sans-serif;font-style:italic\">Hello world!</b></i>")
+    }
+
+    func testForegroundStyle() async throws {
+        let html = await Text("Hello world!")
+            .foregroundStyle(Color.red)
+            .renderHTML()
+        XCTAssertEqual(html, "<span style=\"color:#f00\">Hello world!</span>")
+    }
+
+    func testBackground() async throws {
+        let html = await Text("Hello world!")
+            .background(Color.blue)
+            .renderHTML()
+        XCTAssertEqual(html, "<span style=\"background:#00f\">Hello world!</span>")
+    }
+
+    func testBorder() async throws {
+        let html = await Text("Hello world!")
+            .border(Color.green, width: 4)
+            .renderHTML()
+        XCTAssertEqual(html, "<span style=\"border:4px solid #0f0\">Hello world!</span>")
+    }
 }
