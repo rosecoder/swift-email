@@ -27,8 +27,8 @@ extension Color: PrimitiveShapeStyle {
 
 extension Color {
 
-    static let background = Color("fff", dark: "000")
-    static let text = Color("000", dark: "fff")
+    public static let background = Color("fff", dark: "000")
+    public static let text = Color("000", dark: "fff")
 
     public static let black = Color("000")
     public static let white = Color("fff")

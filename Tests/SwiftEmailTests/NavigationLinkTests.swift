@@ -30,9 +30,9 @@ final class NavigationLinkTests: XCTestCase {
             }
             .padding(.horizontal, 40)
             .padding(.vertical, 10)
-            .border(Color.black, width: 1)
-            .border(Color.green, width: 1, when: .hover)
-            .underline(when: .hover)
+            .border(Color.text, width: 1)
+            .background(Color.text, when: .hover)
+            .foregroundStyle(Color.background, when: .hover)
             .cornerRadius(6)
         }
     }
