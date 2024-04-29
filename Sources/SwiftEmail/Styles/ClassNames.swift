@@ -27,9 +27,17 @@ public struct ClassNames {
     }
 
     func renderValue(options: HTMLRenderOptions) -> String {
-        storage
-            .map { $0.renderCSS(options: options) }
-            .joined(separator: " ")
+        switch options.format {
+        case .compact:
+            storage
+                .map { $0.renderCSS(options: options) }
+                .joined(separator: " ")
+        case .pretty:
+            storage
+                .map { $0.renderCSS(options: options) }
+                .sorted()
+                .joined(separator: " ")
+        }
     }
 }
 
