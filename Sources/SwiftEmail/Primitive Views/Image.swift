@@ -1,5 +1,7 @@
 public struct Image: View {
 
+    @Environment(\.globalStyle) private var globalStyle
+
     let source: Source
 
     var minWidth: Float?
@@ -15,9 +17,28 @@ public struct Image: View {
     }
 
     public var body: some View {
-        ImageSupport()
-        UnsafeNode(tag: "img", attributes: attributes(isDark: false))
-        UnsafeNode(tag: "img", attributes: attributes(isDark: true))
+        get async {
+            let _ = await {
+                await globalStyle.insert(
+                    key: "display",
+                    value: "none",
+                    selector: .className("_l", colorScheme: .dark)
+                )
+                await globalStyle.insert(
+                    key: "display",
+                    value: "none",
+                    selector: .className("_d")
+                )
+                await globalStyle.insert(
+                    key: "display",
+                    value: "unset",
+                    selector: .className("_d", colorScheme: .dark)
+                )
+            }()
+
+            UnsafeNode(tag: "img", attributes: attributes(isDark: false))
+            UnsafeNode(tag: "img", attributes: attributes(isDark: true))
+        }
     }
 
     private func attributes(isDark: Bool) -> UnsafeNode<EmptyView>.Attributes {
@@ -103,29 +124,5 @@ extension Image {
             view.maxHeight = maxHeight
         }
         return view
-    }
-}
-
-private struct ImageSupport: View {}
-
-extension ImageSupport: PrimitiveView {
-    
-    func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
-        await context.globalStyle.insert(
-            key: "display",
-            value: "none",
-            selector: .className("_l", colorScheme: .dark)
-        )
-        await context.globalStyle.insert(
-            key: "display",
-            value: "none",
-            selector: .className("_d")
-        )
-        await context.globalStyle.insert(
-            key: "display",
-            value: "unset",
-            selector: .className("_d", colorScheme: .dark)
-        )
-        return ""
     }
 }

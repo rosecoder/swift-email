@@ -1,7 +1,9 @@
 extension View {
 
     public func renderHTML(options: HTMLRenderOptions = .init()) async -> String {
-        let context = HTMLRenderContext()
+        var context = HTMLRenderContext()
+        context.environmentValues.htmlRenderOptions = options
+        context.environmentValues.globalStyle = context.globalStyle
 
         // Render!
         var result = await renderHTML(options: options, context: context)
@@ -74,5 +76,28 @@ struct HTMLRenderContext {
         case .pretty:
             String(repeating: options.indent, count: Int(indentationLevel))
         }
+    }
+}
+
+private struct HTMLRenderOptionsKey: EnvironmentKey {
+
+    static var defaultValue: HTMLRenderOptions = .init()
+}
+
+private struct GlobalStyleKey: EnvironmentKey {
+
+    static var defaultValue: GlobalStyle = .init()
+}
+
+extension EnvironmentValues {
+
+    var htmlRenderOptions: HTMLRenderOptions {
+        get { self[HTMLRenderOptionsKey.self] }
+        set { self[HTMLRenderOptionsKey.self] = newValue }
+    }
+
+    var globalStyle: GlobalStyle {
+        get { self[GlobalStyleKey.self] }
+        set { self[GlobalStyleKey.self] = newValue }
     }
 }
