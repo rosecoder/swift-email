@@ -33,6 +33,7 @@ final class NavigationLinkTests: XCTestCase {
             .border(Color.black, width: 1)
             .border(Color.green, width: 1, when: .hover)
             .underline(when: .hover)
+            .cornerRadius(6)
         }
     }
 }

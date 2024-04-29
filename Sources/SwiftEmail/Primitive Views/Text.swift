@@ -22,6 +22,10 @@ extension Text: PrimitiveView {
         let needsRenderBackgroundStyle = context.renderedBackgroundStyle != backgroundStyle
         context.renderedBackgroundStyle = backgroundStyle
 
+        let cornerRadius = context.environmentValues.cornerRadius
+        let needsRenderCornerRadius = context.renderedCornerRadius != cornerRadius
+        context.renderedCornerRadius = cornerRadius
+
         let borderStyle = context.environmentValues.borderStyle
         let needsRenderBorderStyle = context.renderedBorderStyle != borderStyle
         context.renderedBorderStyle = borderStyle
@@ -37,6 +41,10 @@ extension Text: PrimitiveView {
         if needsRenderBackgroundStyle {
             if !style.isEmpty { style += ";" }
             style += "background:" + (await backgroundStyle.renderCSSValue(environmentValues: context.environmentValues))
+        }
+        if needsRenderCornerRadius {
+            if !style.isEmpty { style += ";" }
+            style += "border-radius:" + String(Int(cornerRadius)) + "px"
         }
         if needsRenderBorderStyle {
             if !style.isEmpty { style += ";" }

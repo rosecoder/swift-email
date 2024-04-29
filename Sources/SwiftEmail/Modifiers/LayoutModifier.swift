@@ -80,12 +80,14 @@ struct LayoutView<Content: View>: View {
     func body(
         classNames: ClassNames,
         backgroundStyle: AnyShapeStyle?,
+        cornerRadius: Float?,
         borderStyle: AnyShapeStyle?,
         options: HTMLRenderOptions
     ) async -> some View {
         await UnsafeNode(tag: "table", attributes: attributes(
             classNames: classNames,
             backgroundStyle: backgroundStyle,
+            cornerRadius: cornerRadius,
             borderStyle: borderStyle,
             options: options
         )) {
@@ -98,6 +100,7 @@ struct LayoutView<Content: View>: View {
     private func attributes(
         classNames: ClassNames,
         backgroundStyle: AnyShapeStyle?,
+        cornerRadius: Float?,
         borderStyle: AnyShapeStyle?,
         options: HTMLRenderOptions
     ) -> UnsafeNode<AnyView>.Attributes {
@@ -133,6 +136,9 @@ struct LayoutView<Content: View>: View {
         }
         if let backgroundStyle {
             styles["background"] = backgroundStyle
+        }
+        if let cornerRadius {
+            styles["border-radius"] = String(Int(cornerRadius)) + "px"
         }
         if let borderStyle {
             styles["border"] = borderStyle
@@ -190,6 +196,9 @@ extension LayoutView: PrimitiveView {
         let backgroundStyle = context.renderedBackgroundStyle == context.environmentValues.backgroundStyle ? nil : context.environmentValues.backgroundStyle
         context.renderedBackgroundStyle = context.environmentValues.backgroundStyle
 
+        let cornerRadius = context.renderedCornerRadius == context.environmentValues.cornerRadius ? nil : context.environmentValues.cornerRadius
+        context.renderedCornerRadius = context.environmentValues.cornerRadius
+
         let borderStyle = context.renderedBorderStyle == context.environmentValues.borderStyle ? nil : context.environmentValues.borderStyle
         context.renderedBorderStyle = context.environmentValues.borderStyle
 
@@ -199,6 +208,7 @@ extension LayoutView: PrimitiveView {
         return await body(
             classNames: classNames,
             backgroundStyle: backgroundStyle,
+            cornerRadius: cornerRadius,
             borderStyle: borderStyle,
             options: options
         ).renderHTML(options: options, context: context)

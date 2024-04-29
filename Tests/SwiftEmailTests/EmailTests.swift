@@ -38,6 +38,8 @@ final class EmailTests: XCTestCase {
                             .foregroundStyle(Color.black)
                             .padding()
                             .background(Color.green)
+                            .cornerRadius(10)
+                            .cornerRadius(50, when: .hover)
                     }
                     Text("This is a text on another row")
                     Divider()
