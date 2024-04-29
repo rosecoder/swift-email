@@ -65,9 +65,7 @@ extension Text: PrimitiveView {
                 "style": style
             ]
             if !classNames.isEmpty {
-                attributes.values["class"] = classNames
-                    .map { $0.renderCSS(options: options) }
-                    .joined(separator: " ")
+                attributes.values["class"] = classNames.renderValue(options: options)
             }
             return await UnsafeNode(tag: "span", attributes: attributes) {
                 PlainText(value)
@@ -82,7 +80,7 @@ extension Text: PrimitiveView {
 
     @ViewBuilder private func body(
         style: String,
-        classNames: Set<ClassName>,
+        classNames: ClassNames,
         options: HTMLRenderOptions,
         context: HTMLRenderContext
     ) async -> some View {
@@ -103,9 +101,7 @@ extension Text: PrimitiveView {
         ]
         if !classNames.isEmpty {
             let _ = {
-                attributes.values["class"] = classNames
-                    .map { $0.renderCSS(options: options) }
-                    .joined(separator: " ")
+                attributes.values["class"] = classNames.renderValue(options: options)
             }()
         }
         if isBold && isItalic {

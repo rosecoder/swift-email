@@ -78,7 +78,7 @@ struct LayoutView<Content: View>: View {
     }
 
     func body(
-        classNames: Set<ClassName>,
+        classNames: ClassNames,
         backgroundStyle: AnyShapeStyle?,
         borderStyle: AnyShapeStyle?,
         options: HTMLRenderOptions
@@ -96,7 +96,7 @@ struct LayoutView<Content: View>: View {
     }
 
     private func attributes(
-        classNames: Set<ClassName>,
+        classNames: ClassNames,
         backgroundStyle: AnyShapeStyle?,
         borderStyle: AnyShapeStyle?,
         options: HTMLRenderOptions
@@ -141,9 +141,7 @@ struct LayoutView<Content: View>: View {
             attributes.values["style"] = styles
         }
         if !classNames.isEmpty {
-            attributes.values["class"] = classNames
-                .map { $0.renderCSS(options: options) }
-                .joined(separator: " ")
+            attributes.values["class"] = classNames.renderValue(options: options)
         }
         return attributes
     }

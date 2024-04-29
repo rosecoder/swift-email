@@ -62,7 +62,7 @@ struct HTMLRenderContext {
     var indentationLevel: UInt16 = 0
     var environmentValues: EnvironmentValues = .init()
 
-    var renderedClassName: Set<ClassName> = []
+    var renderedClassName = ClassNames()
     var renderedFont: Font = EnvironmentValues.default.font
     var renderedBackgroundStyle: AnyShapeStyle = EnvironmentValues.default.backgroundStyle
     var renderedBorderStyle: AnyShapeStyle = EnvironmentValues.default.borderStyle

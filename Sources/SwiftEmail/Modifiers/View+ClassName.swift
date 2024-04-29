@@ -1,11 +1,11 @@
 private struct ClassNameKey: EnvironmentKey {
 
-    static let defaultValue: Set<ClassName> = []
+    static let defaultValue = ClassNames()
 }
 
 extension EnvironmentValues {
 
-    public var classNames: Set<ClassName> {
+    public var classNames: ClassNames {
         get { self[ClassNameKey.self] }
         set { self[ClassNameKey.self] = newValue }
     }
