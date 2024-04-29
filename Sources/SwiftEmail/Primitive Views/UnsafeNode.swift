@@ -35,15 +35,6 @@ extension UnsafeNode where Content == EmptyView {
 
 extension UnsafeNode: PrimitiveView {
 
-    func prerenderRoot(options: HTMLRenderOptions, context: HTMLRenderContext) async {
-        switch self {
-        case .content(_, _, let content):
-            await content.prerender(options: options, context: context)
-        case .html, .closed:
-            break
-        }
-    }
-
     func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
         let indentation = context.indentation(options: options)
         switch self {

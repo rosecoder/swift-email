@@ -13,17 +13,6 @@ public struct ForEach<Data: RandomAccessCollection, Content: View>: View {
 
 extension ForEach: PrimitiveView {
 
-    func prerenderRoot(options: HTMLRenderOptions, context: HTMLRenderContext) async {
-        await withTaskGroup(of: Void.self) { group in
-            for element in elements {
-                group.addTask {
-                    await content(element).prerender(options: options, context: context)
-                }
-            }
-            await group.waitForAll()
-        }
-    }
-
     func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
         let results = await withTaskGroup(of: (Int, String).self) { group in
             for (index, element) in elements.enumerated() {

@@ -2,22 +2,19 @@ extension View {
 
     public func renderHTML(options: HTMLRenderOptions = .init()) async -> String {
         let context = HTMLRenderContext()
-        await prerender(options: options, context: context)
 
-        let result = await renderHTML(options: options, context: context)
+        // Render!
+        var result = await renderHTML(options: options, context: context)
+
+        // Adjust output for deferred components (like global styles)
+        await deferred(result: &result, options: options, context: context)
+
+        // Suffix
         switch options.format {
         case .compact:
             return result
         case .pretty:
             return result + "\n"
-        }
-    }
-
-    func prerender(options: HTMLRenderOptions, context: HTMLRenderContext) async {
-        if let primitiveView = self as? PrimitiveView {
-            await primitiveView.prerenderRoot(options: options, context: context)
-        } else {
-            await body.prerender(options: options, context: context)
         }
     }
 
@@ -27,6 +24,14 @@ extension View {
             return await primitiveView.renderRootHTML(options: options, context: context)
         }
         return await body.renderHTML(options: options, context: context)
+    }
+
+    private func deferred(result: inout String, options: HTMLRenderOptions, context: HTMLRenderContext) async {
+        await context.globalStyle.renderRootHTMLDeferred(
+            result: &result,
+            options: options,
+            context: context
+        )
     }
 }
 

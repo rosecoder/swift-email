@@ -112,8 +112,8 @@ private struct ImageSupport: View {
 }
 
 extension ImageSupport: PrimitiveView {
-
-    func prerenderRoot(options: HTMLRenderOptions, context: HTMLRenderContext) async {
+    
+    func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
         await context.globalStyle.insert(
             key: "display",
             value: "none",
@@ -129,9 +129,6 @@ extension ImageSupport: PrimitiveView {
             value: "unset",
             selector: .className("_d", colorScheme: .dark)
         )
-    }
-    
-    func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
-        ""
+        return ""
     }
 }

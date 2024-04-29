@@ -13,8 +13,6 @@ public struct PlainText: View {
 
 extension PlainText: PrimitiveView {
 
-    func prerenderRoot(options: HTMLRenderOptions, context: HTMLRenderContext) async {}
-
     func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) -> String {
         context.indentation(options: options) +
         value

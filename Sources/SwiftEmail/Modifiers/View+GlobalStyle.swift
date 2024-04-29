@@ -37,16 +37,12 @@ private struct GlobalStyleOverride<Content: View>: View {
 
 extension GlobalStyleOverride: PrimitiveView {
 
-    func prerenderRoot(options: HTMLRenderOptions, context: HTMLRenderContext) async {
+    func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
         await context.globalStyle.insert(
             key: key,
             value: await value(context.environmentValues),
             selector: selector
         )
-        await content.prerender(options: options, context: context)
-    }
-
-    func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
-        await content.renderHTML(options: options, context: context)
+        return await content.renderHTML(options: options, context: context)
     }
 }

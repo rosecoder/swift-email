@@ -15,10 +15,6 @@ private struct ClassOverride<Content: View>: View {
 
 extension ClassOverride: PrimitiveView {
 
-    func prerenderRoot(options: HTMLRenderOptions, context: HTMLRenderContext) async {
-        await content.prerender(options: options, context: context)
-    }
-
     func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
         await UnsafeNode(tag: "span", attributes: [
             "class": className.renderCSS(options: options),

@@ -11,8 +11,6 @@ public struct Text: View {
 
 extension Text: PrimitiveView {
 
-    func prerenderRoot(options: HTMLRenderOptions, context: HTMLRenderContext) async {}
-
     func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
         var context = context
         let font = context.environmentValues.font

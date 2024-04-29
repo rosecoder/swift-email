@@ -1,6 +1,5 @@
 protocol PrimitiveView {
 
-    func prerenderRoot(options: HTMLRenderOptions, context: HTMLRenderContext) async
     func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String
 }
 

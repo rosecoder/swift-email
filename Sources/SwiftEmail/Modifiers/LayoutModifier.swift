@@ -165,10 +165,6 @@ struct LayoutView<Content: View>: View {
 
 extension LayoutView: PrimitiveView {
 
-    func prerenderRoot(options: HTMLRenderOptions, context: HTMLRenderContext) async {
-        await body(backgroundStyle: nil).prerender(options: options, context: context)
-    }
-
     func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
         var context = context
         let backgroundStyle = context.renderedBackgroundStyle == context.environmentValues.backgroundStyle ? nil : context.environmentValues.backgroundStyle

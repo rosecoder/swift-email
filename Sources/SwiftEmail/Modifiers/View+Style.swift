@@ -25,10 +25,6 @@ struct StyleOverride<Content: View>: View {
 
 extension StyleOverride: PrimitiveView {
 
-    func prerenderRoot(options: HTMLRenderOptions, context: HTMLRenderContext) async {
-        await content.prerender(options: options, context: context)
-    }
-
     func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
         let style = await withTaskGroup(of: String.self) { group in
             for (key, value) in values {

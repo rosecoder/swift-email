@@ -28,7 +28,7 @@ struct Body<Content: View>: View {
 
 extension Body: PrimitiveView {
 
-    func prerenderRoot(options: HTMLRenderOptions, context: HTMLRenderContext) async {
+    func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
         await context.globalStyle.insert(
             key: "color",
             value: context.environmentValues.foregroundStyle,
@@ -39,10 +39,7 @@ extension Body: PrimitiveView {
             value: context.environmentValues.backgroundStyle,
             selector: .element("body", colorScheme: .dark)
         )
-        await content.prerender(options: options, context: context)
-    }
 
-    func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
         var context = context
         context.renderedFont = context.environmentValues.font
         context.renderedBackgroundStyle = context.environmentValues.backgroundStyle
