@@ -20,12 +20,21 @@ public struct NavigationLink<Label>: View where Label: View {
     }
 
     public var body: some View {
-        UnsafeNode(tag: "a", attributes: [
-            "href": destination
-        ]) {
-            buttonStyle.makeBody(configuration: AnyButtonStyle.Configuration(
-                label: AnyButtonStyle.Configuration.Label(label)
-            ))
+        if buttonStyle.content is LinkButtonStyle { // Optimiazation for default LinkButtonStyle
+            UnsafeNode(tag: "a", attributes: [
+                "href": destination,
+            ]) {
+                label
+            }
+        } else {
+            UnsafeNode(tag: "a", attributes: [
+                "href": destination,
+                "style": "text-decoration:none", // Underline can be added through .underline() in the button style itself
+            ]) {
+                buttonStyle.makeBody(configuration: AnyButtonStyle.Configuration(
+                    label: AnyButtonStyle.Configuration.Label(label)
+                ))
+            }
         }
     }
 }

@@ -78,13 +78,13 @@ struct LayoutView<Content: View>: View {
     }
 
     func body(
-        className: ClassName?,
+        classNames: Set<ClassName>,
         backgroundStyle: AnyShapeStyle?,
         borderStyle: AnyShapeStyle?,
         options: HTMLRenderOptions
     ) async -> some View {
         await UnsafeNode(tag: "table", attributes: attributes(
-            className: className,
+            classNames: classNames,
             backgroundStyle: backgroundStyle,
             borderStyle: borderStyle,
             options: options
@@ -96,7 +96,7 @@ struct LayoutView<Content: View>: View {
     }
 
     private func attributes(
-        className: ClassName?,
+        classNames: Set<ClassName>,
         backgroundStyle: AnyShapeStyle?,
         borderStyle: AnyShapeStyle?,
         options: HTMLRenderOptions
@@ -140,8 +140,10 @@ struct LayoutView<Content: View>: View {
         if !styles.isEmpty {
             attributes.values["style"] = styles
         }
-        if let className {
-            attributes.values["class"] = className.renderCSS(options: options)
+        if !classNames.isEmpty {
+            attributes.values["class"] = classNames
+                .map { $0.renderCSS(options: options) }
+                .joined(separator: " ")
         }
         return attributes
     }
@@ -193,11 +195,11 @@ extension LayoutView: PrimitiveView {
         let borderStyle = context.renderedBorderStyle == context.environmentValues.borderStyle ? nil : context.environmentValues.borderStyle
         context.renderedBorderStyle = context.environmentValues.borderStyle
 
-        let className = context.renderedClassName == context.environmentValues.className ? nil : context.environmentValues.className
-        context.renderedClassName = context.environmentValues.className
+        let classNames = context.environmentValues.classNames.subtracting(context.renderedClassName)
+        classNames.forEach { context.renderedClassName.insert($0) }
 
         return await body(
-            className: className,
+            classNames: classNames,
             backgroundStyle: backgroundStyle,
             borderStyle: borderStyle,
             options: options

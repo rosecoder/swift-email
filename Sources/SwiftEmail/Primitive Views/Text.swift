@@ -26,9 +26,8 @@ extension Text: PrimitiveView {
         let needsRenderBorderStyle = context.renderedBorderStyle != borderStyle
         context.renderedBorderStyle = borderStyle
 
-        let className = context.environmentValues.className
-        let needsRenderClassName = context.renderedClassName != className
-        context.renderedClassName = className
+        let classNames = context.environmentValues.classNames.subtracting(context.renderedClassName)
+        classNames.forEach { context.renderedClassName.insert($0) }
 
         let underline = context.environmentValues.underline
         let needsRenderUnderline = context.renderedUnderline != underline
@@ -53,7 +52,7 @@ extension Text: PrimitiveView {
             if !style.isEmpty { style += ";" }
             return await body(
                 style: style,
-                className: needsRenderClassName ? className : nil,
+                classNames: classNames,
                 options: options,
                 context: context
             )
@@ -61,12 +60,14 @@ extension Text: PrimitiveView {
         }
 
         // Wrap in span-node if any styling or class name needs to be applied
-        if !style.isEmpty || needsRenderClassName {
+        if !style.isEmpty || !classNames.isEmpty {
             var attributes: UnsafeNode<PlainText>.Attributes = [
                 "style": style
             ]
-            if needsRenderClassName, let className {
-                attributes.values["class"] = className.renderCSS(options: options)
+            if !classNames.isEmpty {
+                attributes.values["class"] = classNames
+                    .map { $0.renderCSS(options: options) }
+                    .joined(separator: " ")
             }
             return await UnsafeNode(tag: "span", attributes: attributes) {
                 PlainText(value)
@@ -81,7 +82,7 @@ extension Text: PrimitiveView {
 
     @ViewBuilder private func body(
         style: String,
-        className: ClassName?,
+        classNames: Set<ClassName>,
         options: HTMLRenderOptions,
         context: HTMLRenderContext
     ) async -> some View {
@@ -100,9 +101,11 @@ extension Text: PrimitiveView {
         var attributes: UnsafeNode<PlainText>.Attributes = [
             "style": style
         ]
-        if let className {
+        if !classNames.isEmpty {
             let _ = {
-                attributes.values["class"] = className.renderCSS(options: options)
+                attributes.values["class"] = classNames
+                    .map { $0.renderCSS(options: options) }
+                    .joined(separator: " ")
             }()
         }
         if isBold && isItalic {
