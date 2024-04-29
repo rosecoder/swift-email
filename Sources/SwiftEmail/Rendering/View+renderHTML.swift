@@ -67,6 +67,7 @@ struct HTMLRenderContext {
     var renderedBackgroundStyle: AnyShapeStyle = EnvironmentValues.default.backgroundStyle
     var renderedBorderStyle: AnyShapeStyle = EnvironmentValues.default.borderStyle
     var renderedForegroundStyle: AnyShapeStyle = EnvironmentValues.default.foregroundStyle
+    var renderedUnderline = false
     var renderedTag: AnyHashable?
 
     func indentation(options: HTMLRenderOptions) -> String {

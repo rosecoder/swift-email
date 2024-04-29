@@ -30,6 +30,10 @@ extension Text: PrimitiveView {
         let needsRenderClassName = context.renderedClassName != className
         context.renderedClassName = className
 
+        let underline = context.environmentValues.underline
+        let needsRenderUnderline = context.renderedUnderline != underline
+        context.renderedUnderline = underline
+
         var style = ""
         if needsRenderBackgroundStyle {
             if !style.isEmpty { style += ";" }
@@ -38,6 +42,10 @@ extension Text: PrimitiveView {
         if needsRenderBorderStyle {
             if !style.isEmpty { style += ";" }
             style += "border:" + (await borderStyle.renderCSSValue(environmentValues: context.environmentValues))
+        }
+        if needsRenderUnderline {
+            if !style.isEmpty { style += ";" }
+            style += "text-decoration:" + (underline ? "underline" : "none")
         }
 
         // Rendering font may require inserts of multiple nodes for accessbility (bold and italic)

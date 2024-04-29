@@ -80,4 +80,11 @@ final class TextTests: XCTestCase {
             .renderHTML()
         XCTAssertEqual(html, "<span style=\"border:4px solid #0f0\">Hello world!</span>")
     }
+
+    func testUnderline() async throws {
+        let html = await Text("Hello world!")
+            .underline()
+            .renderHTML()
+        XCTAssertEqual(html, "<span style=\"text-decoration:underline\">Hello world!</span>")
+    }
 }
