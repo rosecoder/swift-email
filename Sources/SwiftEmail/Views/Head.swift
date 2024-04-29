@@ -5,8 +5,6 @@ struct Head<Content: View>: View {
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
     }
-
-    var body: some View { noBody }
 }
 
 extension Head: PrimitiveView {

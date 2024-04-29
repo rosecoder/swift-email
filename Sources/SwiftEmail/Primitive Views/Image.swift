@@ -106,10 +106,7 @@ extension Image {
     }
 }
 
-private struct ImageSupport: View {
-
-    var body: some View { noBody }
-}
+private struct ImageSupport: View {}
 
 extension ImageSupport: PrimitiveView {
     

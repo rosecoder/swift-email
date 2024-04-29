@@ -19,8 +19,6 @@ struct StyleOverride<Content: View>: View {
 
     let values: [String: (EnvironmentValues) async -> String]
     let content: Content
-
-    var body: some View { noBody }
 }
 
 extension StyleOverride: PrimitiveView {

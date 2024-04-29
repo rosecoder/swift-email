@@ -13,8 +13,6 @@ struct EnvironmentOverride<Content: View, Value>: View {
     let keyPath: WritableKeyPath<EnvironmentValues, Value>
     let value: Value
     let content: Content
-
-    var body: Never { noBody }
 }
 
 extension EnvironmentOverride: PrimitiveView {

@@ -9,8 +9,6 @@ private struct ClassOverride<Content: View>: View {
 
     let className: ClassName
     let content: Content
-
-    var body: some View { noBody }
 }
 
 extension ClassOverride: PrimitiveView {

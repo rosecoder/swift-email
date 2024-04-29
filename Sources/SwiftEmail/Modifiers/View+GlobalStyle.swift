@@ -31,8 +31,6 @@ private struct GlobalStyleOverride<Content: View>: View {
     let value: (EnvironmentValues) async -> String
     let selector: CSSSelector
     let content: Content
-
-    var body: some View { noBody }
 }
 
 extension GlobalStyleOverride: PrimitiveView {

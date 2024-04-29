@@ -9,3 +9,8 @@ extension PrimitiveView {
         fatalError("Must not call body directly on a view")
     }
 }
+
+extension PrimitiveView where Self: View, Self.Body == Never {
+
+    var body: Body { noBody }
+}
