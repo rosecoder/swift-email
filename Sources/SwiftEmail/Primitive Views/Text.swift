@@ -57,7 +57,7 @@ extension Text: PrimitiveView {
             var attributes: UnsafeNode<PlainText>.Attributes = [
                 "style": style
             ]
-            if let className {
+            if needsRenderClassName, let className {
                 attributes.values["class"] = className.renderCSS(options: options)
             }
             return await UnsafeNode(tag: "span", attributes: attributes) {
