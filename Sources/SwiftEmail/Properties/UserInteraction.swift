@@ -1,5 +1,6 @@
 public enum UserInteraction {
     case hover
+    case active
 }
 
 extension UserInteraction {
@@ -7,6 +8,7 @@ extension UserInteraction {
     var cssPseudo: CSSPseudo {
         switch self {
         case .hover: .hover
+        case .active: .active
         }
     }
 }

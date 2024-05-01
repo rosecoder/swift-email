@@ -27,7 +27,12 @@ extension CSSSelector: Equatable {}
 extension CSSSelector: Comparable {
 
     public static func < (lhs: CSSSelector, rhs: CSSSelector) -> Bool {
-        lhs.target < rhs.target
+        let lhsPriority = lhs.pseudo?.priority ?? 0
+        let rhsPriority = rhs.pseudo?.priority ?? 0
+        if lhsPriority != rhsPriority {
+            return lhsPriority < rhsPriority
+        }
+        return lhs.target < rhs.target
     }
 }
 

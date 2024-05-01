@@ -36,6 +36,7 @@ extension Color {
 
     public static let black = Color("000")
     public static let white = Color("fff")
+    public static let gray = Color("808080")
     public static let red = Color("f00")
     public static let green = Color("0f0")
     public static let blue = Color("00f")
