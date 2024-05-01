@@ -8,6 +8,7 @@ struct LayoutProperties {
     var idealHeight: Float?
     var maxHeight: Float?
     var alignment: Alignment?
+    var textSeparator: String
 
     init(
         padding: EdgeInsets? = nil,
@@ -17,7 +18,8 @@ struct LayoutProperties {
         minHeight: Float? = nil,
         idealHeight: Float? = nil,
         maxHeight: Float? = nil,
-        alignment: Alignment? = nil
+        alignment: Alignment? = nil,
+        textSeparator: String
     ) {
         self.padding = padding
         self.minWidth = minWidth
@@ -27,6 +29,7 @@ struct LayoutProperties {
         self.idealHeight = idealHeight
         self.maxHeight = maxHeight
         self.alignment = alignment
+        self.textSeparator = textSeparator
     }
 }
 
@@ -190,9 +193,10 @@ struct LayoutView<Content: View>: View {
 
 extension LayoutView: PrimitiveView {
 
-    func renderRootHTML(options: RenderOptions, context: RenderContext) async -> String {
+    func _render(options: RenderOptions, context: RenderContext) async -> RenderResult {
         var context = context
-        
+        context.textSeparator = properties.textSeparator
+
         let backgroundStyle = context.renderedBackgroundStyle == context.environmentValues.backgroundStyle ? nil : context.environmentValues.backgroundStyle
         context.renderedBackgroundStyle = context.environmentValues.backgroundStyle
 
@@ -211,6 +215,6 @@ extension LayoutView: PrimitiveView {
             cornerRadius: cornerRadius,
             borderStyle: borderStyle,
             options: options
-        ).renderHTML(options: options, context: context)
+        ).render(options: options, context: context)
     }
 }

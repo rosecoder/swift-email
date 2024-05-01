@@ -13,13 +13,16 @@ public struct PlainText: View {
 
 extension PlainText: PrimitiveView {
 
-    func renderRootHTML(options: RenderOptions, context: RenderContext) -> String {
-        context.indentation(options: options) +
-        value
-            .replacingOccurrences(of: "&", with: "&amp;")
-            .replacingOccurrences(of: "<", with: "&lt;")
-            .replacingOccurrences(of: ">", with: "&gt;")
-            .replacingOccurrences(of: "\"", with: "&quot;")
-            .replacingOccurrences(of: "'", with: "&#39;")
+    func _render(options: RenderOptions, context: RenderContext) async -> RenderResult {
+        .init(
+            html: context.indentation(options: options) +
+                    value
+                        .replacingOccurrences(of: "&", with: "&amp;")
+                        .replacingOccurrences(of: "<", with: "&lt;")
+                        .replacingOccurrences(of: ">", with: "&gt;")
+                        .replacingOccurrences(of: "\"", with: "&quot;")
+                        .replacingOccurrences(of: "'", with: "&#39;"),
+            text: value
+        )
     }
 }

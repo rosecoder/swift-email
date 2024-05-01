@@ -12,7 +12,8 @@ extension View {
             minHeight: nil,
             idealHeight: height,
             maxHeight: nil,
-            alignment: alignment
+            alignment: alignment,
+            textSeparator: " "
         )))
     }
 
@@ -32,7 +33,8 @@ extension View {
             minHeight: minHeight,
             idealHeight: idealHeight,
             maxHeight: maxHeight,
-            alignment: alignment
+            alignment: alignment,
+            textSeparator: " "
         )))
     }
 }

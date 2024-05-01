@@ -35,11 +35,11 @@ extension UnsafeNode where Content == EmptyView {
 
 extension UnsafeNode: PrimitiveView {
 
-    func renderRootHTML(options: RenderOptions, context: RenderContext) async -> String {
+    func _render(options: RenderOptions, context: RenderContext) async -> RenderResult {
         let indentation = context.indentation(options: options)
         switch self {
         case .html(let html):
-            return indentation + String(describing: html)
+            return .init(html: indentation + String(describing: html), text: "")
 
         case .closed(let tag, var attributes):
             let tag = String(describing: tag)
@@ -51,9 +51,9 @@ extension UnsafeNode: PrimitiveView {
             let attributesString = await attributes.renderHTML(options: options, context: context)
             switch options.format {
             case .compact:
-                return indentation + "<" + tag + attributesString + "/>"
+                return .init(html: indentation + "<" + tag + attributesString + "/>", text: "")
             case .pretty:
-                return indentation + "<" + tag + attributesString + " />"
+                return .init(html: indentation + "<" + tag + attributesString + " />", text: "")
             }
 
         case .content(let tag, var attributes, let content):
@@ -66,20 +66,26 @@ extension UnsafeNode: PrimitiveView {
             let attributesString = await attributes.renderHTML(options: options, context: context)
 
             context.indentationLevel += 1
-            let content = await content.renderHTML(options: options, context: context)
+            let content = await content.render(options: options, context: context)
 
             switch options.format {
             case .compact:
-                return "<" + tag + attributesString + ">" +
-                           content +
-                       "</" + tag + ">"
+                return .init(
+                    html: "<" + tag + attributesString + ">" +
+                              content.html +
+                          "</" + tag + ">",
+                    text: content.text
+                )
             case .pretty:
-                if content == "" {
-                    return indentation + "<" + tag + attributesString + "></" + tag + ">"
+                if content.html == "" {
+                    return .init(html: indentation + "<" + tag + attributesString + "></" + tag + ">", text: "")
                 }
-                return indentation + "<" + tag + attributesString + ">\n" +
-                           content + "\n" +
-                       indentation + "</" + tag + ">"
+                return .init(
+                    html: indentation + "<" + tag + attributesString + ">\n" +
+                              content.html + "\n" +
+                          indentation + "</" + tag + ">",
+                    text: content.text
+                )
             }
         }
     }

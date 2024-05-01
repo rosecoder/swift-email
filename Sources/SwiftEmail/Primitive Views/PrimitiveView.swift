@@ -1,6 +1,6 @@
 protocol PrimitiveView {
 
-    func renderRootHTML(options: RenderOptions, context: RenderContext) async -> String
+    func _render(options: RenderOptions, context: RenderContext) async -> RenderResult
 }
 
 extension PrimitiveView {

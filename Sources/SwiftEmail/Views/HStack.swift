@@ -15,7 +15,8 @@ public struct HStack<Content: View>: View {
         self.spacing = spacing
         self.content = content()
         self.layoutProperties = .init(
-            alignment: Alignment(horizontal: .center, vertical: alignment)
+            alignment: Alignment(horizontal: .center, vertical: alignment),
+            textSeparator: " "
         )
     }
 

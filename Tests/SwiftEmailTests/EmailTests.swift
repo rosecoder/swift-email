@@ -23,12 +23,12 @@ extension Image.Source {
 
 final class EmailTests: XCTestCase {
 
-    func testRenderHTML() throws {
+    func testRender() throws {
         let email = Email {
             VStack(alignment: .center) {
                 VStack(alignment: .leading) {
                     HStack(alignment: .top) {
-                        Text("This is a text")
+                        Text("This is a text.")
 
                         Text("Hover me")
                             .background(Color.red)
@@ -41,7 +41,7 @@ final class EmailTests: XCTestCase {
                             .cornerRadius(10)
                             .cornerRadius(50, when: .hover)
                     }
-                    Text("This is a text on another row")
+                    Text("This is a text on another row.")
                     Divider()
                     Image(.logo)
                         .frame(height: 28)
@@ -53,5 +53,6 @@ final class EmailTests: XCTestCase {
         }
 
         assertSnapshot(of: email, as: .html)
+        assertSnapshot(of: email, as: .text)
     }
 }

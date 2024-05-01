@@ -7,7 +7,7 @@ public struct EmptyView: View {
 
 extension EmptyView: PrimitiveView {
 
-    func renderRootHTML(options: RenderOptions, context: RenderContext) -> String {
-        ""
+    func _render(options: RenderOptions, context: RenderContext) async -> RenderResult {
+        .init(html: "", text: "")
     }
 }

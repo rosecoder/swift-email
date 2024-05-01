@@ -18,16 +18,16 @@ final class ViewBuilderTests: XCTestCase {
         let view = Root {
             // Empty
         }
-        let html = await view.renderHTML()
-        XCTAssertEqual(html, "")
+        let render = await view.render()
+        XCTAssertEqual(render.html, "")
     }
 
     func testSingleView() async throws {
         let view = Root {
             Text("Hello world!")
         }
-        let html = await view.renderHTML()
-        XCTAssertEqual(html, "Hello world!")
+        let render = await view.render()
+        XCTAssertEqual(render.html, "Hello world!")
     }
 
     func testMultipleView() async throws {
@@ -36,8 +36,8 @@ final class ViewBuilderTests: XCTestCase {
             Text(" ")
             Text("world!")
         }
-        let html = await view.renderHTML()
-        XCTAssertEqual(html, "Hello world!")
+        let render = await view.render()
+        XCTAssertEqual(render.html, "Hello world!")
     }
 
     func testConditionalTrue() async throws {
@@ -46,8 +46,8 @@ final class ViewBuilderTests: XCTestCase {
                 Text("Hello world!")
             }
         }
-        let html = await view.renderHTML()
-        XCTAssertEqual(html, "Hello world!")
+        let render = await view.render()
+        XCTAssertEqual(render.html, "Hello world!")
     }
 
     func testConditionalFalse() async throws {
@@ -56,8 +56,8 @@ final class ViewBuilderTests: XCTestCase {
                 Text("Hello world!")
             }
         }
-        let html = await view.renderHTML()
-        XCTAssertEqual(html, "")
+        let render = await view.render()
+        XCTAssertEqual(render.html, "")
     }
 
     func testConditionalTrueOrFalse() async throws {
@@ -68,8 +68,8 @@ final class ViewBuilderTests: XCTestCase {
                 Text("world!")
             }
         }
-        let html = await view.renderHTML()
-        XCTAssertEqual(html, "Hello")
+        let render = await view.render()
+        XCTAssertEqual(render.html, "Hello")
     }
 
     func testConditionalFalseOrTrue() async throws {
@@ -80,8 +80,8 @@ final class ViewBuilderTests: XCTestCase {
                 Text("world!")
             }
         }
-        let html = await view.renderHTML()
-        XCTAssertEqual(html, "world!")
+        let render = await view.render()
+        XCTAssertEqual(render.html, "world!")
     }
 
     func testLimitedAvailability() async throws {
@@ -90,7 +90,7 @@ final class ViewBuilderTests: XCTestCase {
                 Text("Hello world!")
             }
         }
-        let html = await view.renderHTML()
-        XCTAssertEqual(html, "Hello world!")
+        let render = await view.render()
+        XCTAssertEqual(render.html, "Hello world!")
     }
 }

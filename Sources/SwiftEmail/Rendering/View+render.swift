@@ -1,12 +1,12 @@
 extension View {
 
-    public func renderHTML(options: RenderOptions = .init()) async -> String {
+    public func render(options: RenderOptions = .init()) async -> RenderResult {
         var context = RenderContext()
         context.environmentValues.renderOptions = options
         context.environmentValues.globalStyle = context.globalStyle
 
         // Render!
-        var result = await renderHTML(options: options, context: context)
+        var result = await render(options: options, context: context)
 
         // Adjust output for deferred components (like global styles)
         await deferred(result: &result, options: options, context: context)
@@ -14,21 +14,23 @@ extension View {
         // Suffix
         switch options.format {
         case .compact:
-            return result
+            break
         case .pretty:
-            return result + "\n"
+            result.html += "\n"
+            result.text += "\n"
         }
+        return result
     }
 
-    func renderHTML(options: RenderOptions, context: RenderContext) async -> String {
+    func render(options: RenderOptions, context: RenderContext) async -> RenderResult {
         EnvironmentValues.current = context.environmentValues
         if let primitiveView = self as? PrimitiveView {
-            return await primitiveView.renderRootHTML(options: options, context: context)
+            return await primitiveView._render(options: options, context: context)
         }
-        return await body.renderHTML(options: options, context: context)
+        return await body.render(options: options, context: context)
     }
 
-    private func deferred(result: inout String, options: RenderOptions, context: RenderContext) async {
+    private func deferred(result: inout RenderResult, options: RenderOptions, context: RenderContext) async {
         await context.globalStyle.renderRootHTMLDeferred(
             result: &result,
             options: options,

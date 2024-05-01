@@ -19,15 +19,15 @@ public struct TupleView<Elements>: View, ParentableView {
 
 extension TupleView: PrimitiveView {
 
-    func renderRootHTML(options: RenderOptions, context: RenderContext) async -> String {
-        let results = await withTaskGroup(of: (Int, String).self) { group in
+    func _render(options: RenderOptions, context: RenderContext) async -> RenderResult {
+        let results = await withTaskGroup(of: (Int, RenderResult).self) { group in
             for (index, element) in children.enumerated() {
                 group.addTask {
-                    (index, await element.renderHTML(options: options, context: context))
+                    (index, await element.render(options: options, context: context))
                 }
             }
 
-            var results = [(Int, String)]()
+            var results = [(Int, RenderResult)]()
             results.reserveCapacity(children.count)
             for await result in group {
                 results.append(result)
@@ -35,14 +35,22 @@ extension TupleView: PrimitiveView {
             return results
                 .sorted(by: { $0.0 < $1.0 })
                 .map { $0.1 }
-                .filter { !$0.isEmpty }
+                .filter { !$0.html.isEmpty }
         }
+
+        let text = results.map({ $0.text }).filter({ !$0.isEmpty }).joined(separator: context.textSeparator)
 
         switch options.format {
         case .compact:
-            return results.joined()
+            return .init(
+                html: results.map({ $0.html }).joined(),
+                text: text
+            )
         case .pretty:
-            return results.joined(separator: "\n")
+            return .init(
+                html: results.map({ $0.html }).joined(separator: "\n"),
+                text: text
+            )
         }
     }
 }

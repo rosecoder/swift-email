@@ -4,7 +4,8 @@ import SwiftEmail
 final class DividerTests: XCTestCase {
 
     func testRenderHTML() async throws {
-        let html = await Divider().renderHTML()
-        XCTAssertEqual(html, "<hr/>")
+        let render = await Divider().render()
+        XCTAssertEqual(render.html, "<hr/>")
+        XCTAssertEqual(render.text, "")
     }
 }

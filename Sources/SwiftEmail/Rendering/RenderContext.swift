@@ -13,6 +13,8 @@ struct RenderContext {
     var renderedUnderline = false
     var renderedTag: AnyHashable?
 
+    var textSeparator: String = "\n"
+
     func indentation(options: RenderOptions) -> String {
         switch options.format {
         case .compact:

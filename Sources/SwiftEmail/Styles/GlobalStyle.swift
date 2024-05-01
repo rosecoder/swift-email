@@ -31,14 +31,14 @@ private let deferredConstant = "ef2993441110ac1c38501cf51009ce85"
 
 extension GlobalStyle: PrimitiveView {
 
-    nonisolated func renderRootHTML(options: RenderOptions, context: RenderContext) async -> String {
-        deferredConstant
+    nonisolated func _render(options: RenderOptions, context: RenderContext) async -> RenderResult {
+        .init(html: deferredConstant, text: "")
     }
 
-    nonisolated func renderRootHTMLDeferred(result: inout String, options: RenderOptions, context: RenderContext) async {
+    nonisolated func renderRootHTMLDeferred(result: inout RenderResult, options: RenderOptions, context: RenderContext) async {
         let content = await contentWithStyle(options: options, context: context)
-        let output = await content.renderHTML(options: options, context: context)
-        result = result.replacingOccurrences(of: deferredConstant, with: output)
+        let output = await content.render(options: options, context: context).html
+        result.html = result.html.replacingOccurrences(of: deferredConstant, with: output)
     }
 
     @ViewBuilder private nonisolated func contentWithStyle(options: RenderOptions, context: RenderContext) async -> some View {

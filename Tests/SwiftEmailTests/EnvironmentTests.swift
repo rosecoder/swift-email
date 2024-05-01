@@ -28,15 +28,17 @@ final class EnvironmentTests: XCTestCase {
 
     func testEnvironmentDefaultUsage() async throws {
         let view = UsageView()
-        let html = await view.renderHTML()
-        XCTAssertEqual(html, "Hello world!")
+        let render = await view.render()
+        XCTAssertEqual(render.html, "Hello world!")
+        XCTAssertEqual(render.text, "Hello world!")
     }
 
     func testEnvironmentOverrideUsage() async throws {
         let view = UsageView()
             .environment(\.test, "Override!")
-        let html = await view.renderHTML()
-        XCTAssertEqual(html, "Override!")
+        let render = await view.render()
+        XCTAssertEqual(render.html, "Override!")
+        XCTAssertEqual(render.text, "Override!")
     }
 
     func testEnvironmentOverrideUsageMultipleAsync() async throws {
@@ -45,8 +47,9 @@ final class EnvironmentTests: XCTestCase {
                 group.addTask {
                     let view = UsageView()
                         .environment(\.test, "Override \(index)")
-                    let html = await view.renderHTML()
-                    XCTAssertEqual(html, "Override \(index)")
+                    let render = await view.render()
+                    XCTAssertEqual(render.html, "Override \(index)")
+                    XCTAssertEqual(render.text, "Override \(index)")
                 }
             }
         }

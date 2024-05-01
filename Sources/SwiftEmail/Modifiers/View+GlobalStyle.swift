@@ -27,12 +27,12 @@ private struct GlobalStyleOverride<Content: View>: View {
 
 extension GlobalStyleOverride: PrimitiveView {
 
-    func renderRootHTML(options: RenderOptions, context: RenderContext) async -> String {
+    func _render(options: RenderOptions, context: RenderContext) async -> RenderResult {
         await context.globalStyle.insert(
             key: key,
             value: value,
             selector: selector
         )
-        return await content.renderHTML(options: options, context: context)
+        return await content.render(options: options, context: context)
     }
 }

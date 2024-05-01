@@ -11,7 +11,7 @@ public struct Text: View {
 
 extension Text: PrimitiveView {
 
-    func renderRootHTML(options: RenderOptions, context: RenderContext) async -> String {
+    func _render(options: RenderOptions, context: RenderContext) async -> RenderResult {
         var context = context
         
         let font = context.environmentValues.font
@@ -72,7 +72,7 @@ extension Text: PrimitiveView {
                 options: options,
                 context: context
             )
-            .renderHTML(options: options, context: context)
+            .render(options: options, context: context)
         }
 
         // Wrap in span-node if any styling or class name needs to be applied
@@ -86,12 +86,12 @@ extension Text: PrimitiveView {
             return await UnsafeNode(tag: "span", attributes: attributes) {
                 PlainText(value)
             }
-            .renderHTML(options: options, context: context)
+            .render(options: options, context: context)
         }
 
         // No styling, just return plain text
         return await PlainText(value)
-            .renderHTML(options: options, context: context)
+            .render(options: options, context: context)
     }
 
     @ViewBuilder private func body(

@@ -9,7 +9,8 @@ extension View {
 
     public func padding(_ insets: EdgeInsets) -> some View {
         modifier(LayoutModifier(tag: "padding", properties: LayoutProperties(
-            padding: insets
+            padding: insets,
+            textSeparator: " "
         )))
     }
 }

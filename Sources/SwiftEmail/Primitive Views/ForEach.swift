@@ -13,15 +13,15 @@ public struct ForEach<Data: RandomAccessCollection, Content: View>: View {
 
 extension ForEach: PrimitiveView {
 
-    func renderRootHTML(options: RenderOptions, context: RenderContext) async -> String {
-        let results = await withTaskGroup(of: (Int, String).self) { group in
+    func _render(options: RenderOptions, context: RenderContext) async -> RenderResult {
+        let results = await withTaskGroup(of: (Int, RenderResult).self) { group in
             for (index, element) in elements.enumerated() {
                 group.addTask {
-                    (index, await content(element).renderHTML(options: options, context: context))
+                    (index, await content(element).render(options: options, context: context))
                 }
             }
 
-            var results = [(Int, String)]()
+            var results = [(Int, RenderResult)]()
             results.reserveCapacity(elements.count)
             for await result in group {
                 results.append(result)
@@ -31,11 +31,19 @@ extension ForEach: PrimitiveView {
                 .map { $0.1 }
         }
 
+        let text = results.map({ $0.text }).filter({ !$0.isEmpty }).joined(separator: context.textSeparator)
+
         switch options.format {
         case .compact:
-            return results.joined()
+            return .init(
+                html: results.map({ $0.html }).joined(),
+                text: text
+            )
         case .pretty:
-            return results.joined(separator: "\n")
+            return .init(
+                html: results.map({ $0.html }).joined(separator: "\n"),
+                text: text
+            )
         }
     }
 }

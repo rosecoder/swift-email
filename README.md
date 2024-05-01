@@ -26,7 +26,9 @@ let email = Email {
     }
 }
 
-let output = await email.renderHTML()
+let render = await email.render()
+let html = render.html
+let plainText = render.text
 ```
 
 ## Contributing

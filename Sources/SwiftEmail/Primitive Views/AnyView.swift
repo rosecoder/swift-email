@@ -15,7 +15,7 @@ public struct AnyView: View {
 
 extension AnyView: PrimitiveView {
 
-    func renderRootHTML(options: RenderOptions, context: RenderContext) async -> String {
-        await (content as! any View).renderHTML(options: options, context: context)
+    func _render(options: RenderOptions, context: RenderContext) async -> RenderResult {
+        await (content as! any View).render(options: options, context: context)
     }
 }

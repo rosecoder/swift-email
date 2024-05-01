@@ -15,7 +15,8 @@ public struct VStack<Content: View>: View {
         self.spacing = spacing
         self.content = content()
         self.layoutProperties = .init(
-            alignment: Alignment(horizontal: alignment, vertical: .top)
+            alignment: Alignment(horizontal: alignment, vertical: .top),
+            textSeparator: "\n"
         )
     }
 

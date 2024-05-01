@@ -15,11 +15,11 @@ extension Snapshotting where Value: View, Format == String {
         var snapshotting = SimplySnapshotting.lines.asyncPullback { (view: Value) in
             Async { callback in
                 Task {
-                    let result = await view.renderHTML(options: .init(
+                    let result = await view.render(options: .init(
                         format: format,
                         indent: indent
                     ))
-                    callback(result)
+                    callback(result.html)
                 }
             }
         }
