@@ -36,6 +36,13 @@ extension CSSSelector: Comparable {
     }
 }
 
+extension CSSSelector: CustomDebugStringConvertible {
+
+    public var debugDescription: String {
+        "CSSSelector(\(target.debugDescription), pseudo: \(pseudo?.renderCSSPseudo() ?? "nil"), colorScheme: \(colorScheme?.debugDescription ?? "nil"))"
+    }
+}
+
 extension CSSSelector {
 
     public enum Target {
@@ -47,6 +54,18 @@ extension CSSSelector {
 extension CSSSelector.Target: Hashable {}
 extension CSSSelector.Target: Equatable {}
 extension CSSSelector.Target: Comparable {}
+
+extension CSSSelector.Target: CustomDebugStringConvertible {
+
+    public var debugDescription: String {
+        switch self {
+        case .className(let className):
+            return ".className(\(className.debugDescription))"
+        case .element(let tag):
+            return ".element(\(tag))"
+        }
+    }
+}
 
 extension CSSSelector {
 

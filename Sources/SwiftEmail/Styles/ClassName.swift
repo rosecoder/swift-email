@@ -25,6 +25,18 @@ extension ClassName: ExpressibleByStringLiteral {
     }
 }
 
+extension ClassName: CustomDebugStringConvertible {
+
+    public var debugDescription: String {
+        switch self {
+        case .constant(let constant):
+            return "\"\(constant)\""
+        case .unique:
+            return renderCSS(options: .init(format: .pretty))
+        }
+    }
+}
+
 extension ClassName: UnsafeNodeAttributesValue {
 
     public func renderValue(environmentValues: EnvironmentValues) async -> String {
