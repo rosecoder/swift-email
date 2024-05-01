@@ -16,6 +16,10 @@ public struct Color: ShapeStyle {
     public func resolve(in environment: EnvironmentValues) -> Never {
         noResolved
     }
+
+    var hasAlternative: Bool {
+        !alternatives.isEmpty
+    }
 }
 
 extension Color: PrimitiveShapeStyle {

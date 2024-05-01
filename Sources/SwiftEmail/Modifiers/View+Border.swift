@@ -13,8 +13,21 @@ extension EnvironmentValues {
 
 extension View {
 
-    public func border<Style: ShapeStyle>(_ style: Style, width: Float = 1) -> some View {
-        environment(\.borderStyle, AnyShapeStyle(BorderShapeStyle(style: style, width: width)))
+    @ViewBuilder public func border<Style: ShapeStyle>(
+        _ style: Style,
+        width: Float = 1,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> some View {
+        let borderStyle = BorderShapeStyle(style: style, width: width)
+        if (style as? Color)?.hasAlternative == false {
+            environment(\.borderStyle, AnyShapeStyle(borderStyle))
+        } else {
+            let className = ClassName(uniqueAt: file, line: line)
+            environment(\.borderStyle, AnyShapeStyle(borderStyle))
+                .unsafeClass(className)
+                .unsafeGlobalStyle("border", borderStyle, selector: .className(className, colorScheme: .dark))
+        }
     }
 
     public func border<Style: ShapeStyle>(
