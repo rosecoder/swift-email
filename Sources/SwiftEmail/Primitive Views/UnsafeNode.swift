@@ -35,7 +35,7 @@ extension UnsafeNode where Content == EmptyView {
 
 extension UnsafeNode: PrimitiveView {
 
-    func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
+    func renderRootHTML(options: RenderOptions, context: RenderContext) async -> String {
         let indentation = context.indentation(options: options)
         switch self {
         case .html(let html):

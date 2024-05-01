@@ -19,7 +19,7 @@ public struct TupleView<Elements>: View, ParentableView {
 
 extension TupleView: PrimitiveView {
 
-    func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
+    func renderRootHTML(options: RenderOptions, context: RenderContext) async -> String {
         let results = await withTaskGroup(of: (Int, String).self) { group in
             for (index, element) in children.enumerated() {
                 group.addTask {

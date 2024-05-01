@@ -11,7 +11,7 @@ public struct Text: View {
 
 extension Text: PrimitiveView {
 
-    func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
+    func renderRootHTML(options: RenderOptions, context: RenderContext) async -> String {
         var context = context
         
         let font = context.environmentValues.font
@@ -97,8 +97,8 @@ extension Text: PrimitiveView {
     @ViewBuilder private func body(
         style: String,
         classNames: ClassNames,
-        options: HTMLRenderOptions,
-        context: HTMLRenderContext
+        options: RenderOptions,
+        context: RenderContext
     ) async -> some View {
         let font = context.environmentValues.font
         let size: String = "\(font.size)px"

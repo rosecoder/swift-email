@@ -11,7 +11,7 @@ extension UnsafeNode {
             self.values = .init(uniqueKeysWithValues: elements)
         }
 
-        func renderHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
+        func renderHTML(options: RenderOptions, context: RenderContext) async -> String {
             if values.isEmpty {
                 return ""
             }

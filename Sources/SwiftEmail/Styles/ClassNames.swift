@@ -26,7 +26,7 @@ public struct ClassNames {
         try storage.forEach(body)
     }
 
-    func renderValue(options: HTMLRenderOptions) -> String {
+    func renderValue(options: RenderOptions) -> String {
         switch options.format {
         case .compact:
             storage

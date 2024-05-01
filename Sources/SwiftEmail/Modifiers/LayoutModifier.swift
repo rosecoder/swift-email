@@ -82,7 +82,7 @@ struct LayoutView<Content: View>: View {
         backgroundStyle: AnyShapeStyle?,
         cornerRadius: Float?,
         borderStyle: AnyShapeStyle?,
-        options: HTMLRenderOptions
+        options: RenderOptions
     ) async -> some View {
         await UnsafeNode(tag: "table", attributes: attributes(
             classNames: classNames,
@@ -102,7 +102,7 @@ struct LayoutView<Content: View>: View {
         backgroundStyle: AnyShapeStyle?,
         cornerRadius: Float?,
         borderStyle: AnyShapeStyle?,
-        options: HTMLRenderOptions
+        options: RenderOptions
     ) -> UnsafeNode<AnyView>.Attributes {
         var attributes: UnsafeNode<AnyView>.Attributes = [
             "cellspacing": "0",
@@ -190,7 +190,7 @@ struct LayoutView<Content: View>: View {
 
 extension LayoutView: PrimitiveView {
 
-    func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
+    func renderRootHTML(options: RenderOptions, context: RenderContext) async -> String {
         var context = context
         
         let backgroundStyle = context.renderedBackgroundStyle == context.environmentValues.backgroundStyle ? nil : context.environmentValues.backgroundStyle

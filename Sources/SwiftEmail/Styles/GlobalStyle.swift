@@ -14,21 +14,34 @@ public actor GlobalStyle: View {
     public var body: some View { noBody }
 }
 
+private struct GlobalStyleKey: EnvironmentKey {
+
+    static var defaultValue: GlobalStyle = .init()
+}
+
+extension EnvironmentValues {
+
+    var globalStyle: GlobalStyle {
+        get { self[GlobalStyleKey.self] }
+        set { self[GlobalStyleKey.self] = newValue }
+    }
+}
+
 private let deferredConstant = "ef2993441110ac1c38501cf51009ce85"
 
 extension GlobalStyle: PrimitiveView {
 
-    nonisolated func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
+    nonisolated func renderRootHTML(options: RenderOptions, context: RenderContext) async -> String {
         deferredConstant
     }
 
-    nonisolated func renderRootHTMLDeferred(result: inout String, options: HTMLRenderOptions, context: HTMLRenderContext) async {
+    nonisolated func renderRootHTMLDeferred(result: inout String, options: RenderOptions, context: RenderContext) async {
         let content = await contentWithStyle(options: options, context: context)
         let output = await content.renderHTML(options: options, context: context)
         result = result.replacingOccurrences(of: deferredConstant, with: output)
     }
 
-    @ViewBuilder private nonisolated func contentWithStyle(options: HTMLRenderOptions, context: HTMLRenderContext) async -> some View {
+    @ViewBuilder private nonisolated func contentWithStyle(options: RenderOptions, context: RenderContext) async -> some View {
         let selectors = await selectors
         await UnsafeNode(tag: "style") {
             Text(".ExternalClass {width:100%;}")
@@ -100,13 +113,13 @@ extension GlobalStyle: PrimitiveView {
         }
     }
 
-    private static func compact(selectors: [CSSSelector: Styles], options: HTMLRenderOptions, context: HTMLRenderContext) -> some View {
+    private static func compact(selectors: [CSSSelector: Styles], options: RenderOptions, context: RenderContext) -> some View {
         ForEach(Array(selectors.keys)) { selector in
             Text(selector.renderCSS(options: options) + "{" + (await selectors[selector]!.renderCSS(environmentValues: context.environmentValues, isImportant: true)) + "}")
         }
     }
 
-    private static func pretty(selectors: [CSSSelector: Styles], options: HTMLRenderOptions, context: HTMLRenderContext) async -> some View {
+    private static func pretty(selectors: [CSSSelector: Styles], options: RenderOptions, context: RenderContext) async -> some View {
         ForEach(Array(selectors.keys).sorted()) { selector in
             let properties = await withTaskGroup(of: String.self) { group in
                 let properties = selectors[selector]!.properties

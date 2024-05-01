@@ -17,7 +17,7 @@ struct EnvironmentOverride<Content: View, Value>: View {
 
 extension EnvironmentOverride: PrimitiveView {
 
-    func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) async -> String {
+    func renderRootHTML(options: RenderOptions, context: RenderContext) async -> String {
         var context = context
         context.environmentValues[keyPath: keyPath] = value
         return await content.renderHTML(options: options, context: context)

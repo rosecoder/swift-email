@@ -69,7 +69,7 @@ extension CSSSelector.Target: CustomDebugStringConvertible {
 
 extension CSSSelector {
 
-    func renderCSS(options: HTMLRenderOptions) -> String {
+    func renderCSS(options: RenderOptions) -> String {
         var output: String
         switch target {
         case .className(let className):

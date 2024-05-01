@@ -9,7 +9,7 @@ extension Snapshotting where Value: View, Format == String {
     }
 
     public static func html(
-        format: HTMLRenderOptions.Format = .pretty,
+        format: RenderOptions.Format = .pretty,
         indent: String = "  "
     ) -> Snapshotting {
         var snapshotting = SimplySnapshotting.lines.asyncPullback { (view: Value) in

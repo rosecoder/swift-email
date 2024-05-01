@@ -40,13 +40,13 @@ extension ClassName: CustomDebugStringConvertible {
 extension ClassName: UnsafeNodeAttributesValue {
 
     public func renderValue(environmentValues: EnvironmentValues) async -> String {
-        renderCSS(options: HTMLRenderOptions()) // TODO: Pass correct render options
+        renderCSS(options: RenderOptions()) // TODO: Pass correct render options
     }
 }
 
 extension ClassName {
 
-    func renderCSS(options: HTMLRenderOptions) -> String {
+    func renderCSS(options: RenderOptions) -> String {
         switch self {
         case .constant(let rawValue):
             return rawValue

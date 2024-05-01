@@ -13,7 +13,7 @@ public struct PlainText: View {
 
 extension PlainText: PrimitiveView {
 
-    func renderRootHTML(options: HTMLRenderOptions, context: HTMLRenderContext) -> String {
+    func renderRootHTML(options: RenderOptions, context: RenderContext) -> String {
         context.indentation(options: options) +
         value
             .replacingOccurrences(of: "&", with: "&amp;")
