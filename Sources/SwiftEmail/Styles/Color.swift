@@ -40,3 +40,10 @@ extension Color {
     public static let green = Color("0f0")
     public static let blue = Color("00f")
 }
+
+extension Color: CustomDebugStringConvertible {
+
+    public var debugDescription: String {
+        "Color(\(name), alternatives: [\(alternatives.map({ $0.debugDescription + ": " + $1 }).joined(separator: ", "))])"
+    }
+}
