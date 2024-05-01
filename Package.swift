@@ -9,6 +9,7 @@ let package = Package(
     ],
     products: [
         .library(name: "SwiftEmail", targets: ["SwiftEmail"]),
+        .library(name: "SwiftEmailTesting", targets: ["SwiftEmailTesting"]),
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.16.0"),
