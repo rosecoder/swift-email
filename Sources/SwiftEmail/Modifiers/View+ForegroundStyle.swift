@@ -13,8 +13,19 @@ extension EnvironmentValues {
 
 extension View {
 
-    public func foregroundStyle<Style: ShapeStyle>(_ style: Style) -> some View {
-        environment(\.foregroundStyle, AnyShapeStyle(style))
+    @ViewBuilder public func foregroundStyle<Style: ShapeStyle>(
+        _ style: Style,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> some View {
+        if (style as? Color)?.hasAlternative == false {
+            environment(\.foregroundStyle, AnyShapeStyle(style))
+        } else {
+            let className = ClassName(uniqueAt: file, line: line)
+            environment(\.foregroundStyle, AnyShapeStyle(style))
+                .unsafeClass(className)
+                .unsafeGlobalStyle("color", style, selector: .className(className, colorScheme: .dark))
+        }
     }
 
     public func foregroundStyle<Style: ShapeStyle>(
