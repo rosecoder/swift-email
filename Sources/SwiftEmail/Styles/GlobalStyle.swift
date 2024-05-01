@@ -44,24 +44,59 @@ extension GlobalStyle: PrimitiveView {
             }
 
             ForEach(ColorScheme.allCases) { colorScheme in
-                let selectors = selectors.filter { $0.key.colorScheme == colorScheme }
+                let alternativeContext = {
+                    var context = context
+                    context.environmentValues.colorScheme = colorScheme
+                    context.indentationLevel += 1
+                    return context
+                }()
+                let selectorKeysHavingAlternative = await Self.selectorKeysHavingAlternative(
+                    selectors: selectors,
+                    normal: context.environmentValues,
+                    alternative: alternativeContext.environmentValues
+                )
+                let selectors = selectors.filter { selectorKeysHavingAlternative.contains($0.key) }
                 if !selectors.isEmpty {
-                    let context = {
-                        var context = context
-                        context.environmentValues.colorScheme = colorScheme
-                        context.indentationLevel += 1
-                        return context
-                    }()
                     Text("@media (prefers-color-scheme: \(colorScheme.renderCSS())) {")
                     switch options.format {
                     case .compact:
-                        Self.compact(selectors: selectors, options: options, context: context)
+                        Self.compact(selectors: selectors, options: options, context: alternativeContext)
                     case .pretty:
-                        await Self.pretty(selectors: selectors, options: options, context: context)
+                        await Self.pretty(selectors: selectors, options: options, context: alternativeContext)
                     }
                     Text("}")
                 }
             }
+        }
+    }
+
+    private static func selectorKeysHavingAlternative(selectors: [CSSSelector: Styles], normal: EnvironmentValues, alternative: EnvironmentValues) async -> Set<CSSSelector> {
+        await withTaskGroup(of: CSSSelector?.self) { group in
+            var keys = Set<CSSSelector>()
+            for (key, value) in selectors {
+                if key.colorScheme == alternative.colorScheme { // quick exit for the selector is implcit for the color scheme
+                    keys.insert(key)
+                } else {
+                    group.addTask {
+                        for property in value.properties {
+                            async let lhs = property.value.renderCSSValue(environmentValues: normal)
+                            async let rhs = property.value.renderCSSValue(environmentValues: alternative)
+                            let lhsValue = await lhs
+                            let rhsValue = await rhs
+                            if lhsValue != rhsValue {
+                                return key
+                            }
+                        }
+                        return nil
+                    }
+                }
+            }
+            for await key in group {
+                if let key {
+                    keys.insert(key)
+                }
+            }
+            return keys
         }
     }
 
