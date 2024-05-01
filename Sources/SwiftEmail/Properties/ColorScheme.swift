@@ -16,3 +16,13 @@ extension ColorScheme {
         }
     }
 }
+
+extension ColorScheme: CustomDebugStringConvertible {
+
+    public var debugDescription: String {
+        switch self {
+        case .light: "ColorScheme.light"
+        case .dark: "ColorScheme.dark"
+        }
+    }
+}
