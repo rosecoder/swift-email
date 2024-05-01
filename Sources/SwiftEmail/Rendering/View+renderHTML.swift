@@ -65,9 +65,9 @@ struct HTMLRenderContext {
     var renderedClassName = ClassNames()
     var renderedFont: Font = EnvironmentValues.default.font
     var renderedBackgroundStyle: AnyShapeStyle = EnvironmentValues.default.backgroundStyle
+    var renderedForegroundStyle: AnyShapeStyle = EnvironmentValues.default.foregroundStyle
     var renderedCornerRadius = EnvironmentValues.default.cornerRadius
     var renderedBorderStyle: AnyShapeStyle = EnvironmentValues.default.borderStyle
-    var renderedForegroundStyle: AnyShapeStyle = EnvironmentValues.default.foregroundStyle
     var renderedUnderline = false
     var renderedTag: AnyHashable?
 

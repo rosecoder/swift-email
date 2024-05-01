@@ -14,9 +14,7 @@ extension EnvironmentValues {
 extension View {
 
     public func foregroundStyle<Style: ShapeStyle>(_ style: Style) -> some View {
-        self
-            .unsafeStyle("color", style)
-            .environment(\.foregroundStyle, AnyShapeStyle(style))
+        environment(\.foregroundStyle, AnyShapeStyle(style))
     }
 
     public func foregroundStyle<Style: ShapeStyle>(
