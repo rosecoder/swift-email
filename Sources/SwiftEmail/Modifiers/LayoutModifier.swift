@@ -33,13 +33,56 @@ struct LayoutProperties {
     }
 }
 
+protocol LayoutableView {
+
+    var layoutProperties: LayoutProperties { get set }
+}
+
+struct AnyLayoutableView: View, LayoutableView {
+
+    var content: Any
+
+    init(_ content: any View & LayoutableView) {
+        self.content = content
+    }
+
+    init(@ViewBuilder content: () async -> any View) async {
+        self.content = await content()
+    }
+
+    var body: some View { noBody }
+
+    var layoutProperties: LayoutProperties {
+        get {
+            (content as! LayoutableView).layoutProperties
+        }
+        set {
+            var content = content as! LayoutableView
+            content.layoutProperties = newValue
+            self.content = content
+        }
+    }
+}
+
+extension AnyLayoutableView: PrimitiveView {
+
+    func _render(options: RenderOptions, context: RenderContext) async -> RenderResult {
+        await (content as! any View).render(options: options, context: context)
+    }
+}
+
 struct LayoutModifier: ViewModifier {
 
     let tag: String
-    let properties: LayoutProperties
+    var layoutProperties: LayoutProperties
+
+    init(tag: String, properties: LayoutProperties) {
+        self.tag = tag
+        self.layoutProperties = properties
+    }
 
     func body(content: Content) -> some View {
-        LayoutView(properties: properties) { context in
+        LayoutView(properties: layoutProperties) { context in
             context.topTR
             UnsafeNode(tag: "tr", attributes: context.aligmentAttributes ?? [:]) {
                 AnyView(body(content: content, context: context))
@@ -55,6 +98,38 @@ struct LayoutModifier: ViewModifier {
             content
         }
         context.trailingTD
+    }
+}
+
+extension LayoutModifier: LayoutableView {}
+
+extension ModifiedContent: LayoutableView where Modifier: LayoutableView {
+
+    var layoutProperties: LayoutProperties {
+        get { modifier.layoutProperties }
+        set { modifier.layoutProperties = newValue }
+    }
+}
+
+extension ConditionalContent: LayoutableView where TrueContent: LayoutableView, FalseContent: LayoutableView {
+
+    var layoutProperties: LayoutProperties {
+        get {
+            switch self {
+            case .first(let view): view.layoutProperties
+            case .second(let view): view.layoutProperties
+            }
+        }
+        set {
+            switch self {
+            case .first(var view):
+                view.layoutProperties = newValue
+                self = .first(view)
+            case .second(var view):
+                view.layoutProperties = newValue
+                self = .second(view)
+            }
+        }
     }
 }
 

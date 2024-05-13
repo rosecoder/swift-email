@@ -15,8 +15,8 @@ extension View {
 
 public struct ModifiedContent<Content: View, Modifier: ViewModifier>: View {
 
-    fileprivate let content: Content
-    fileprivate let modifier: Modifier
+    let content: Content
+    var modifier: Modifier
 
     public var body: some View {
         modifier.body(content: AnyView(content))
