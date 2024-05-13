@@ -44,7 +44,7 @@ extension GlobalStyle: PrimitiveView {
     @ViewBuilder private nonisolated func contentWithStyle(options: RenderOptions, context: RenderContext) async -> some View {
         let selectors = await selectors
         await UnsafeNode(tag: "style") {
-            Text(".ExternalClass {width:100%;}")
+            UnsafePlainText(".ExternalClass {width:100%;}")
 
             do {
                 let selectors = selectors.filter { $0.key.colorScheme == nil }
@@ -70,14 +70,14 @@ extension GlobalStyle: PrimitiveView {
                 )
                 let selectors = selectors.filter { selectorKeysHavingAlternative.contains($0.key) }
                 if !selectors.isEmpty {
-                    Text("@media (prefers-color-scheme: \(colorScheme.renderCSS())) {")
+                    UnsafePlainText("@media (prefers-color-scheme: \(colorScheme.renderCSS())) {")
                     switch options.format {
                     case .compact:
                         Self.compact(selectors: selectors, options: options, context: alternativeContext)
                     case .pretty:
                         await Self.pretty(selectors: selectors, options: options, context: alternativeContext)
                     }
-                    Text("}")
+                    UnsafePlainText("}")
                 }
             }
         }
@@ -115,7 +115,7 @@ extension GlobalStyle: PrimitiveView {
 
     private static func compact(selectors: [CSSSelector: Styles], options: RenderOptions, context: RenderContext) -> some View {
         ForEach(Array(selectors.keys)) { selector in
-            Text(selector.renderCSS(options: options) + "{" + (await selectors[selector]!.renderCSS(environmentValues: context.environmentValues, isImportant: true)) + "}")
+            UnsafePlainText(selector.renderCSS(options: options) + "{" + (await selectors[selector]!.renderCSS(environmentValues: context.environmentValues, isImportant: true)) + "}")
         }
     }
 
@@ -137,7 +137,7 @@ extension GlobalStyle: PrimitiveView {
                 return results.sorted().joined(separator: ";\n") + ";"
             }
 
-            Text(
+            UnsafePlainText(
                 selector.renderCSS(options: options) + " {\n" +
                 properties + "\n" +
                 context.indentation(options: options) + options.indent + "}"

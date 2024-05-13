@@ -8,6 +8,12 @@ final class TextTests: XCTestCase {
         XCTAssertEqual(render.html, "Hello world!")
     }
 
+    func testRenderHTMLWithNewline() async throws {
+        let render = await Text("Hello\nworld!").render()
+        XCTAssertEqual(render.html, "Hello<br/>world!")
+        XCTAssertEqual(render.text, "Hello\nworld!")
+    }
+
     func testRenderHTMLEscapeCharacters() async throws {
         do {
             let render = await Text("<script>alert('XSS')</script>").render()
