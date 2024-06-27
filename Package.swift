@@ -4,6 +4,7 @@ import PackageDescription
 
 let package = Package(
     name: "SwiftEmail",
+    defaultLocalization: "en",
     platforms: [
        .macOS("12.0"),
     ],
@@ -27,6 +28,8 @@ let package = Package(
             "SwiftEmail",
             "SwiftEmailTesting",
             .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+        ], resources: [
+            .process("Resources/"),
         ]),
     ]
 )
