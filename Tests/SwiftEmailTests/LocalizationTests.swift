@@ -56,4 +56,26 @@ final class LocalizationTests: XCTestCase {
         )
         XCTAssertEqual(swedish, "Testar 100")
     }
+
+    func testTextStaticKey() async {
+        do {
+            let render = await Text("testing", bundle: .module).environment(\.locale, Locale(identifier: "en")).render()
+            XCTAssertEqual(render.html, "Testing")
+        }
+        do {
+            let render = await Text("testing", bundle: .module).environment(\.locale, Locale(identifier: "sv")).render()
+            XCTAssertEqual(render.html, "Testar")
+        }
+    }
+
+    func testTextFormattedKey() async {
+        do {
+            let render = await Text("testing \("hello")", bundle: .module).environment(\.locale, Locale(identifier: "en")).render()
+            XCTAssertEqual(render.html, "Testing hello")
+        }
+        do {
+            let render = await Text("testing \("hello")", bundle: .module).environment(\.locale, Locale(identifier: "sv")).render()
+            XCTAssertEqual(render.html, "Testar hello")
+        }
+    }
 }

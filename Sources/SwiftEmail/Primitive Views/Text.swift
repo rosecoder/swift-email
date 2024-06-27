@@ -1,9 +1,24 @@
+import Foundation
+
 public struct Text: View {
 
-    let value: String
+    enum Storage {
+        case verbatim(String)
+        case localized(LocalizedStringKey, Bundle?)
+    }
 
-    public init(_ value: String) {
-        self.value = value
+    let storage: Storage
+
+    public init(_ key: LocalizedStringKey, bundle: Bundle? = nil, comment: StaticString? = nil) {
+        self.storage = .localized(key, bundle)
+    }
+
+    public init(verbatim value: String) {
+        self.storage = .verbatim(value)
+    }
+
+    public init<S: StringProtocol>(_ content: S) {
+        self.storage = .verbatim(String(content))
     }
 
     public var body: some View { noBody }
@@ -84,13 +99,13 @@ extension Text: PrimitiveView {
                 attributes.values["class"] = classNames.renderValue(options: options)
             }
             return await UnsafeNode(tag: "span", attributes: attributes) {
-                PlainText(value)
+                PlainText(await getPlainString(context: context))
             }
             .render(options: options, context: context)
         }
 
         // No styling, just return plain text
-        return await PlainText(value)
+        return await PlainText(getPlainString(context: context))
             .render(options: options, context: context)
     }
 
@@ -121,15 +136,24 @@ extension Text: PrimitiveView {
             }()
         }
         if isBold && isItalic {
-            UnsafeNode(tag: "i") {
-                UnsafeNode(tag: "b", attributes: attributes) {
-                    PlainText(value)
+            await UnsafeNode(tag: "i") {
+                await UnsafeNode(tag: "b", attributes: attributes) {
+                    PlainText(await getPlainString(context: context))
                 }
             }
         } else {
-            UnsafeNode(tag: isBold ? "b" : isItalic ? "i" : "span", attributes: attributes) {
-                PlainText(value)
+            await UnsafeNode(tag: isBold ? "b" : isItalic ? "i" : "span", attributes: attributes) {
+                PlainText(await getPlainString(context: context))
             }
+        }
+    }
+
+    private func getPlainString(context: RenderContext) async -> String {
+        switch storage {
+        case .verbatim(let string):
+            return string
+        case .localized(let key, let bundle):
+            return await LocalizedStringsService.shared.translated(key: key, bundle: bundle ?? .main, locale: context.environmentValues.locale)
         }
     }
 }
