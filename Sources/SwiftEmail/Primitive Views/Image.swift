@@ -89,7 +89,7 @@ extension Image {
         width: Float? = nil,
         height: Float? = nil,
         alignment: Alignment = .center
-    ) -> some View {
+    ) -> Image {
         var view = self
         if let width {
             view.idealWidth = width
