@@ -94,8 +94,22 @@ extension Image: PrimitiveView {
             if let idealHeight {
                 attributes.values["height"] = String(Int(idealHeight))
             }
+            var style = ""
             if let borderStyle {
-                attributes.values["style"] = "border:" + (await borderStyle.renderCSSValue(environmentValues: environmentValues))
+                if !style.isEmpty { style += ";" }
+                style += "border:" + (await borderStyle.renderCSSValue(environmentValues: environmentValues))
+            }
+            if let contentMode = environmentValues.contentMode {
+                if !style.isEmpty { style += ";" }
+                switch contentMode {
+                case .fill:
+                    style += "object-fit:cover"
+                case .fit:
+                    style += "object-fit:contain"
+                }
+            }
+            if !style.isEmpty {
+                attributes.values["style"] = style
             }
             return attributes
         }

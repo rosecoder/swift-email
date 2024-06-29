@@ -23,4 +23,11 @@ final class ImageTests: XCTestCase {
             .border(Color.red)
         assertSnapshot(of: root, as: .html)
     }
+
+    func testRenderHTMLWithScaledToFill() throws {
+        let root = Image(url)
+            .frame(width: 500, height: 200)
+            .scaledToFill()
+        assertSnapshot(of: root, as: .html)
+    }
 }
