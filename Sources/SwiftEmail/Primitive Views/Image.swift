@@ -12,6 +12,10 @@ public struct Image: View {
     var idealHeight: Float?
     var maxHeight: Float?
 
+    public init(_ url: String) {
+        self.source = .init(defaultURL: url)
+    }
+
     public init(_ source: Source) {
         self.source = source
     }
