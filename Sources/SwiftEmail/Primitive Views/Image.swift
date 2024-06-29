@@ -18,32 +18,37 @@ public struct Image: View {
 
     public var body: some View {
         get async {
-            let _ = await {
-                await globalStyle.insert(
-                    key: "display",
-                    value: "none",
-                    selector: .className("_l", colorScheme: .dark)
-                )
-                await globalStyle.insert(
-                    key: "display",
-                    value: "none",
-                    selector: .className("_d")
-                )
-                await globalStyle.insert(
-                    key: "display",
-                    value: "unset",
-                    selector: .className("_d", colorScheme: .dark)
-                )
-            }()
-
-            UnsafeNode(tag: "img", attributes: attributes(isDark: false))
-            UnsafeNode(tag: "img", attributes: attributes(isDark: true))
+            if source.darkURL == nil {
+                UnsafeNode(tag: "img", attributes: attributes(isDark: false, includeClass: false))
+            } else {
+                let _ = await {
+                    await globalStyle.insert(
+                        key: "display",
+                        value: "none",
+                        selector: .className("_l", colorScheme: .dark)
+                    )
+                    await globalStyle.insert(
+                        key: "display",
+                        value: "none",
+                        selector: .className("_d")
+                    )
+                    await globalStyle.insert(
+                        key: "display",
+                        value: "unset",
+                        selector: .className("_d", colorScheme: .dark)
+                    )
+                }()
+                UnsafeNode(tag: "img", attributes: attributes(isDark: false, includeClass: true))
+                UnsafeNode(tag: "img", attributes: attributes(isDark: true, includeClass: true))
+            }
         }
     }
 
-    private func attributes(isDark: Bool) -> UnsafeNode<EmptyView>.Attributes {
+    private func attributes(isDark: Bool, includeClass: Bool) -> UnsafeNode<EmptyView>.Attributes {
         var attributes: UnsafeNode<EmptyView>.Attributes = [:]
-        attributes.values["class"] = isDark ? "_d" : "_l"
+        if includeClass {
+            attributes.values["class"] = isDark ? "_d" : "_l"
+        }
         attributes.values["src"] = isDark ? source.darkURL : source.defaultURL
         attributes.values["srcset"] = (isDark ? source.darkAlternatives ?? source.alternatives : source.alternatives)
             .map { $1 + " " + $0 }
