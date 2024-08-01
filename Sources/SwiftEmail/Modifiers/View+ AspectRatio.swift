@@ -1,6 +1,6 @@
 private struct ContentModeKey: EnvironmentKey {
 
-    static var defaultValue: ContentMode?
+    static let defaultValue: ContentMode? = nil
 }
 
 extension EnvironmentValues {
@@ -11,7 +11,7 @@ extension EnvironmentValues {
     }
 }
 
-public enum ContentMode {
+public enum ContentMode: Sendable {
     case fill
     case fit
 }

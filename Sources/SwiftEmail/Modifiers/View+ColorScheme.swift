@@ -1,6 +1,6 @@
 private struct ColorSchemeKey: EnvironmentKey {
 
-    static var defaultValue: ColorScheme = .light
+    static let defaultValue: ColorScheme = .light
 }
 
 extension EnvironmentValues {

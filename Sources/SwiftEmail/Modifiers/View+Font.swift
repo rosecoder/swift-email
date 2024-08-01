@@ -1,6 +1,6 @@
 private struct FontKey: EnvironmentKey {
 
-    static var defaultValue: Font = .system
+    static let defaultValue: Font = .system
 }
 
 extension EnvironmentValues {

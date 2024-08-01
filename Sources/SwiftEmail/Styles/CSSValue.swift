@@ -1,4 +1,4 @@
-public protocol CSSValue {
+public protocol CSSValue: Sendable {
 
     func renderCSSValue(environmentValues: EnvironmentValues) -> String
 }

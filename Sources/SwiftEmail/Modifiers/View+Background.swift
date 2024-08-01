@@ -1,6 +1,6 @@
 private struct BackgroundStyleKey: EnvironmentKey {
 
-    static var defaultValue: AnyShapeStyle = AnyShapeStyle(Color.background)
+    static let defaultValue: AnyShapeStyle = AnyShapeStyle(Color.background)
 }
 
 extension EnvironmentValues {

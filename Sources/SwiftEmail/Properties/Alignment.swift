@@ -1,4 +1,4 @@
-public struct Alignment {
+public struct Alignment: Sendable {
 
     public var horizontal: HorizontalAlignment
     public var vertical: VerticalAlignment

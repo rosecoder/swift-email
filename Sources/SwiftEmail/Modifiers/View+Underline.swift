@@ -1,6 +1,6 @@
 private struct UnderlineKey: EnvironmentKey {
 
-    static var defaultValue = false
+    static let defaultValue = false
 }
 
 extension EnvironmentValues {

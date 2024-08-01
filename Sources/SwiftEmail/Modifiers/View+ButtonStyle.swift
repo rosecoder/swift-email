@@ -1,6 +1,6 @@
 private struct ButtonStyleKey: EnvironmentKey {
 
-    static var defaultValue: AnyButtonStyle = AnyButtonStyle(LinkButtonStyle())
+    static let defaultValue: AnyButtonStyle = AnyButtonStyle(LinkButtonStyle())
 }
 
 extension EnvironmentValues {
@@ -18,7 +18,7 @@ extension View {
     }
 }
 
-public protocol ButtonStyle {
+public protocol ButtonStyle: Sendable {
 
     typealias Configuration = ButtonStyleConfiguration
     associatedtype Body: View

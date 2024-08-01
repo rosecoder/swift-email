@@ -1,6 +1,6 @@
 extension Font {
 
-    public enum Weight {
+    public enum Weight: Sendable {
         case black
         case bold
         case heavy

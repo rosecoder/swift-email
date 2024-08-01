@@ -1,4 +1,4 @@
-public struct CSSSelector {
+public struct CSSSelector: Sendable {
 
     let target: Target
     let pseudo: CSSPseudo?
@@ -45,7 +45,7 @@ extension CSSSelector: CustomDebugStringConvertible {
 
 extension CSSSelector {
 
-    public enum Target {
+    public enum Target: Sendable {
         case className(ClassName)
         case element(String)
     }

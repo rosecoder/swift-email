@@ -19,6 +19,8 @@ let package = Package(
     targets: [
         .target(name: "SwiftEmail", dependencies: [
             .product(name: "Crypto", package: "swift-crypto"),
+        ], swiftSettings: [
+            .enableExperimentalFeature("StrictConcurrency"),
         ]),
         .target(name: "SwiftEmailTesting", dependencies: [
             "SwiftEmail",

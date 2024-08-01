@@ -1,6 +1,6 @@
-public struct RenderOptions {
+public struct RenderOptions: Sendable {
 
-    public enum Format {
+    public enum Format: Sendable {
         case compact
         case pretty
     }
@@ -19,7 +19,7 @@ public struct RenderOptions {
 
 private struct RenderOptionsKey: EnvironmentKey {
 
-    static var defaultValue: RenderOptions = .init()
+    static let defaultValue: RenderOptions = .init()
 }
 
 extension EnvironmentValues {

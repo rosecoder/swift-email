@@ -4,7 +4,7 @@ import SwiftEmail
 
 private struct TestKey: EnvironmentKey {
 
-    static var defaultValue = "Hello world!"
+    static let defaultValue = "Hello world!"
 }
 
 extension EnvironmentValues {

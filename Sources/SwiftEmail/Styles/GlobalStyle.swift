@@ -16,7 +16,7 @@ public actor GlobalStyle: View {
 
 private struct GlobalStyleKey: EnvironmentKey {
 
-    static var defaultValue: GlobalStyle = .init()
+    static let defaultValue: GlobalStyle = .init()
 }
 
 extension EnvironmentValues {

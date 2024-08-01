@@ -11,7 +11,7 @@ struct RenderContext {
     var renderedCornerRadius = EnvironmentValues.default.cornerRadius
     var renderedBorderStyle: AnyShapeStyle = EnvironmentValues.default.borderStyle
     var renderedUnderline = false
-    var renderedTag: AnyHashable?
+    var renderedTag: Tag?
 
     var textSeparator: String = "\n"
 

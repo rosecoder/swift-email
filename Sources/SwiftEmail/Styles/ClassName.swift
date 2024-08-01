@@ -1,7 +1,7 @@
 import Crypto
 import Foundation
 
-public enum ClassName {
+public enum ClassName: Sendable {
     case constant(String)
     case unique(file: String, line: UInt)
 

@@ -1,6 +1,6 @@
 private struct BorderStyleKey: EnvironmentKey {
 
-    static var defaultValue: AnyShapeStyle = AnyShapeStyle(Color.black)
+    static let defaultValue: AnyShapeStyle = AnyShapeStyle(Color.black)
 }
 
 extension EnvironmentValues {

@@ -1,4 +1,4 @@
-public protocol ShapeStyle: Hashable {
+public protocol ShapeStyle: Sendable, Hashable {
 
     associatedtype Resolved: ShapeStyle
 

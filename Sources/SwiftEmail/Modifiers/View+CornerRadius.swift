@@ -1,6 +1,6 @@
 private struct CornerRadiusKey: EnvironmentKey {
 
-    static var defaultValue: Float = 0
+    static let defaultValue: Float = 0
 }
 
 extension EnvironmentValues {

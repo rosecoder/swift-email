@@ -29,15 +29,15 @@ struct Body<Content: View>: View {
 extension Body: PrimitiveView {
 
     func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
-        taskGroup.addTask {
-            await context.globalStyle.insert(
+        taskGroup.addTask { [globalStyle = context.globalStyle, foregroundStyle = context.environmentValues.foregroundStyle, backgroundStyle = context.environmentValues.backgroundStyle] in
+            await globalStyle.insert(
                 key: "color",
-                value: context.environmentValues.foregroundStyle,
+                value: foregroundStyle,
                 selector: .element("body", colorScheme: .dark)
             )
-            await context.globalStyle.insert(
+            await globalStyle.insert(
                 key: "background",
-                value: context.environmentValues.backgroundStyle,
+                value: backgroundStyle,
                 selector: .element("body", colorScheme: .dark)
             )
         }

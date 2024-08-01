@@ -1,4 +1,4 @@
-public enum CSSPseudo {
+public enum CSSPseudo: Sendable {
     case hover
     case active
 }

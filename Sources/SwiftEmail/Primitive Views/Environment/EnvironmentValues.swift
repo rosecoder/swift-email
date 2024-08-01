@@ -1,8 +1,8 @@
 import Foundation
 
-public struct EnvironmentValues {
+public struct EnvironmentValues: Sendable {
 
-    var overrides = [String: Any]()
+    var overrides = [String: any Sendable]()
 
     public subscript<K: EnvironmentKey>(key: K.Type) -> K.Value {
         get {

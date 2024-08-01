@@ -1,6 +1,6 @@
 extension Edge {
 
-    public struct Set {
+    public struct Set: Sendable {
 
         let values: Swift.Set<Edge>
 

@@ -1,4 +1,4 @@
-public enum HorizontalAlignment {
+public enum HorizontalAlignment: Sendable {
     case leading
     case center
     case trailing

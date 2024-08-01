@@ -1,4 +1,4 @@
-public struct Font {
+public struct Font: Sendable {
 
     let name: String
     var size: Int

@@ -1,6 +1,6 @@
 public protocol EnvironmentKey {
 
-    associatedtype Value
+    associatedtype Value: Sendable
 
     static var defaultValue: Value { get }
 }

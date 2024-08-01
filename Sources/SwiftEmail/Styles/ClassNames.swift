@@ -1,4 +1,4 @@
-public struct ClassNames {
+public struct ClassNames: Sendable {
 
     private var storage: Set<ClassName>
 

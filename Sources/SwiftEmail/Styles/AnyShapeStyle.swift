@@ -1,6 +1,6 @@
 public struct AnyShapeStyle: ShapeStyle {
 
-    let content: Any
+    let content: any Sendable
     fileprivate let hash: Int
 
     public init(_ content: any ShapeStyle) {

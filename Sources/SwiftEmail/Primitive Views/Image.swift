@@ -25,18 +25,18 @@ extension Image: PrimitiveView {
 
     func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
         if source.darkURL != nil {
-            taskGroup.addTask {
-                await context.globalStyle.insert(
+            taskGroup.addTask { [globalStyle = context.globalStyle] in
+                await globalStyle.insert(
                     key: "display",
                     value: "none",
                     selector: .className("_l", colorScheme: .dark)
                 )
-                await context.globalStyle.insert(
+                await globalStyle.insert(
                     key: "display",
                     value: "none",
                     selector: .className("_d")
                 )
-                await context.globalStyle.insert(
+                await globalStyle.insert(
                     key: "display",
                     value: "unset",
                     selector: .className("_d", colorScheme: .dark)
