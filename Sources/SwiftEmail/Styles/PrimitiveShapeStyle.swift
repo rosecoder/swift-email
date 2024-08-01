@@ -1,6 +1,6 @@
 protocol PrimitiveShapeStyle {
 
-    func renderRootCSSValue(environmentValues: EnvironmentValues) async -> String
+    func renderRootCSSValue(environmentValues: EnvironmentValues) -> String
 }
 
 extension PrimitiveShapeStyle {

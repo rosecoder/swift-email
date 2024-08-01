@@ -8,7 +8,7 @@ public struct AnyShapeStyle: ShapeStyle {
         self.hash = content.hashValue
     }
 
-    public func resolve(in environment: EnvironmentValues) async -> Never {
+    public func resolve(in environment: EnvironmentValues) -> Never {
         noResolved
     }
 }
@@ -29,14 +29,14 @@ extension AnyShapeStyle: Equatable {
 
 extension AnyShapeStyle: PrimitiveShapeStyle {
 
-    func renderRootCSSValue(environmentValues: EnvironmentValues) async -> String {
-        await (content as! any ShapeStyle).renderCSSValue(environmentValues: environmentValues)
+    func renderRootCSSValue(environmentValues: EnvironmentValues) -> String {
+        (content as! any ShapeStyle).renderCSSValue(environmentValues: environmentValues)
     }
 }
 
 extension AnyShapeStyle: CSSValue {
 
-    public func renderCSSValue(environmentValues: EnvironmentValues) async -> String {
-        await renderRootCSSValue(environmentValues: environmentValues)
+    public func renderCSSValue(environmentValues: EnvironmentValues) -> String {
+        renderRootCSSValue(environmentValues: environmentValues)
     }
 }

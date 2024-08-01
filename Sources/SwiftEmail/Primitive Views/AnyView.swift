@@ -6,8 +6,8 @@ public struct AnyView: View {
         self.content = content
     }
 
-    init(@ViewBuilder content: () async -> any View) async {
-        self.content = await content()
+    init(@ViewBuilder content: () -> any View) {
+        self.content = content()
     }
 
     public var body: some View { noBody }
@@ -15,7 +15,7 @@ public struct AnyView: View {
 
 extension AnyView: PrimitiveView {
 
-    func _render(options: RenderOptions, context: RenderContext) async -> RenderResult {
-        await (content as! any View).render(options: options, context: context)
+    func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
+        (content as! any View).render(options: options, taskGroup: &taskGroup, context: context)
     }
 }

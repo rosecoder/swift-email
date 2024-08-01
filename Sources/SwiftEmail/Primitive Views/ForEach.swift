@@ -1,9 +1,9 @@
 public struct ForEach<Data: RandomAccessCollection, Content: View>: View {
 
     let elements: Data
-    let content: (Data.Element) async -> Content
+    let content: (Data.Element) -> Content
 
-    public init(_ elements: Data, @ViewBuilder content: @escaping (Data.Element) async -> Content) {
+    public init(_ elements: Data, @ViewBuilder content: @escaping (Data.Element) -> Content) {
         self.elements = elements
         self.content = content
     }
@@ -13,22 +13,9 @@ public struct ForEach<Data: RandomAccessCollection, Content: View>: View {
 
 extension ForEach: PrimitiveView {
 
-    func _render(options: RenderOptions, context: RenderContext) async -> RenderResult {
-        let results = await withTaskGroup(of: (Int, RenderResult).self) { group in
-            for (index, element) in elements.enumerated() {
-                group.addTask {
-                    (index, await content(element).render(options: options, context: context))
-                }
-            }
-
-            var results = [(Int, RenderResult)]()
-            results.reserveCapacity(elements.count)
-            for await result in group {
-                results.append(result)
-            }
-            return results
-                .sorted(by: { $0.0 < $1.0 })
-                .map { $0.1 }
+    func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
+        let results = elements.map {
+            content($0).render(options: options, taskGroup: &taskGroup, context: context)
         }
 
         let text = results.map({ $0.text }).filter({ !$0.isEmpty }).joined(separator: context.textSeparator)

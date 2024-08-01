@@ -46,8 +46,8 @@ struct AnyLayoutableView: View, LayoutableView {
         self.content = content
     }
 
-    init(@ViewBuilder content: () async -> any View) async {
-        self.content = await content()
+    init(@ViewBuilder content: () -> any View) {
+        self.content = content()
     }
 
     var body: some View { noBody }
@@ -66,8 +66,8 @@ struct AnyLayoutableView: View, LayoutableView {
 
 extension AnyLayoutableView: PrimitiveView {
 
-    func _render(options: RenderOptions, context: RenderContext) async -> RenderResult {
-        await (content as! any View).render(options: options, context: context)
+    func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
+        (content as! any View).render(options: options, taskGroup: &taskGroup, context: context)
     }
 }
 
@@ -145,11 +145,11 @@ struct LayoutBodyContext {
 struct LayoutView<Content: View>: View {
 
     let properties: LayoutProperties
-    let content: (LayoutBodyContext) async -> Content
+    let content: (LayoutBodyContext) -> Content
 
     init(
         properties: LayoutProperties,
-        @ViewBuilder content: @escaping (LayoutBodyContext) async -> Content
+        @ViewBuilder content: @escaping (LayoutBodyContext) -> Content
     ) {
         self.properties = properties
         self.content = content
@@ -161,16 +161,16 @@ struct LayoutView<Content: View>: View {
         cornerRadius: Float?,
         borderStyle: AnyShapeStyle?,
         options: RenderOptions
-    ) async -> some View {
-        await UnsafeNode(tag: "table", attributes: attributes(
+    ) -> some View {
+        UnsafeNode(tag: "table", attributes: attributes(
             classNames: classNames,
             backgroundStyle: backgroundStyle,
             cornerRadius: cornerRadius,
             borderStyle: borderStyle,
             options: options
         )) {
-            await AnyView {
-                await content(bodyContext)
+            AnyView {
+                content(bodyContext)
             }
         }
     }
@@ -268,7 +268,7 @@ struct LayoutView<Content: View>: View {
 
 extension LayoutView: PrimitiveView {
 
-    func _render(options: RenderOptions, context: RenderContext) async -> RenderResult {
+    func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
         var context = context
         context.textSeparator = properties.textSeparator
 
@@ -284,12 +284,12 @@ extension LayoutView: PrimitiveView {
         let classNames = context.environmentValues.classNames.subtracting(context.renderedClassName)
         classNames.forEach { context.renderedClassName.insert($0) }
 
-        return await body(
+        return body(
             classNames: classNames,
             backgroundStyle: backgroundStyle,
             cornerRadius: cornerRadius,
             borderStyle: borderStyle,
             options: options
-        ).render(options: options, context: context)
+        ).render(options: options, taskGroup: &taskGroup, context: context)
     }
 }

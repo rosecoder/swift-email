@@ -25,23 +25,23 @@ extension Divider {
 
 extension Divider: PrimitiveView {
 
-    func _render(options: RenderOptions, context: RenderContext) async -> RenderResult {
+    func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
         let node = if let className {
             AnyView(
-                await UnsafeNode(tag: "hr", attributes: [
+                UnsafeNode(tag: "hr", attributes: [
                     "style": "border:0;border-top:1px solid " + style.renderCSSValue(environmentValues: context.environmentValues),
                     "class": className.renderCSS(options: options),
                 ])
                 .unsafeGlobalStyle("border-top-color", style as any ShapeStyle, selector: .className(className, colorScheme: .dark))
             )
         } else {
-            AnyView(await UnsafeNode(tag: "hr", attributes: [
+            AnyView(UnsafeNode(tag: "hr", attributes: [
                 "style": "border:0;border-top:1px solid " + style.renderCSSValue(environmentValues: context.environmentValues),
             ]))
         }
 
         return .init(
-            html: await node.render(options: options, context: context).html,
+            html: node.render(options: options, taskGroup: &taskGroup, context: context).html,
             text: "\n"
         )
     }

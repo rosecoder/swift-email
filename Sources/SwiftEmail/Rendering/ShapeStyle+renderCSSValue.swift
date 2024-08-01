@@ -1,9 +1,9 @@
 extension ShapeStyle {
 
-    func renderCSSValue(environmentValues: EnvironmentValues) async -> String {
+    func renderCSSValue(environmentValues: EnvironmentValues) -> String {
         if let primitive = self as? PrimitiveShapeStyle {
-            return await primitive.renderRootCSSValue(environmentValues: environmentValues)
+            return primitive.renderRootCSSValue(environmentValues: environmentValues)
         }
-        return await resolve(in: environmentValues).renderCSSValue(environmentValues: environmentValues)
+        return resolve(in: environmentValues).renderCSSValue(environmentValues: environmentValues)
     }
 }

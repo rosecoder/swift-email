@@ -28,22 +28,24 @@ struct Body<Content: View>: View {
 
 extension Body: PrimitiveView {
 
-    func _render(options: RenderOptions, context: RenderContext) async -> RenderResult {
-        await context.globalStyle.insert(
-            key: "color",
-            value: context.environmentValues.foregroundStyle,
-            selector: .element("body", colorScheme: .dark)
-        )
-        await context.globalStyle.insert(
-            key: "background",
-            value: context.environmentValues.backgroundStyle,
-            selector: .element("body", colorScheme: .dark)
-        )
+    func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
+        taskGroup.addTask {
+            await context.globalStyle.insert(
+                key: "color",
+                value: context.environmentValues.foregroundStyle,
+                selector: .element("body", colorScheme: .dark)
+            )
+            await context.globalStyle.insert(
+                key: "background",
+                value: context.environmentValues.backgroundStyle,
+                selector: .element("body", colorScheme: .dark)
+            )
+        }
 
         var context = context
         context.renderedFont = context.environmentValues.font
         context.renderedBackgroundStyle = context.environmentValues.backgroundStyle
         context.renderedForegroundStyle = context.environmentValues.foregroundStyle
-        return await body.render(options: options, context: context)
+        return body.render(options: options, taskGroup: &taskGroup, context: context)
     }
 }

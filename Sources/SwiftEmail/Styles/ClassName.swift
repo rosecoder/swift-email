@@ -39,7 +39,7 @@ extension ClassName: CustomDebugStringConvertible {
 
 extension ClassName: UnsafeNodeAttributesValue {
 
-    public func renderValue(environmentValues: EnvironmentValues) async -> String {
+    public func renderValue(environmentValues: EnvironmentValues) -> String {
         renderCSS(options: RenderOptions()) // TODO: Pass correct render options
     }
 }

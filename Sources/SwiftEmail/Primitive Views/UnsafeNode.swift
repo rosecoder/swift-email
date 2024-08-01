@@ -11,14 +11,6 @@ public enum UnsafeNode<Content: View>: View {
         self = .content(tag: tag, attributes, content())
     }
 
-    public init(
-        tag: StaticString,
-        attributes: Attributes = [:],
-        @ViewBuilder content: () async -> Content
-    ) async {
-        self = .content(tag: tag, attributes, await content())
-    }
-
     public var body: Never { noBody }
 }
 
@@ -35,7 +27,7 @@ extension UnsafeNode where Content == EmptyView {
 
 extension UnsafeNode: PrimitiveView {
 
-    func _render(options: RenderOptions, context: RenderContext) async -> RenderResult {
+    func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
         let indentation = context.indentation(options: options)
         switch self {
         case .html(let html):
@@ -48,7 +40,7 @@ extension UnsafeNode: PrimitiveView {
                 attributes.values["data-tag"] = String(describing: debugTag)
                 context.renderedTag = debugTag
             }
-            let attributesString = await attributes.renderHTML(options: options, context: context)
+            let attributesString = attributes.renderHTML(options: options, context: context)
             switch options.format {
             case .compact:
                 return .init(html: indentation + "<" + tag + attributesString + "/>", text: "")
@@ -63,10 +55,10 @@ extension UnsafeNode: PrimitiveView {
                 attributes.values["data-tag"] = String(describing: debugTag)
                 context.renderedTag = debugTag
             }
-            let attributesString = await attributes.renderHTML(options: options, context: context)
+            let attributesString = attributes.renderHTML(options: options, context: context)
 
             context.indentationLevel += 1
-            let content = await content.render(options: options, context: context)
+            let content = content.render(options: options, taskGroup: &taskGroup, context: context)
 
             switch options.format {
             case .compact:

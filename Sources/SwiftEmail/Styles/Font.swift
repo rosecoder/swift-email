@@ -16,7 +16,7 @@ extension Font: Equatable {}
 
 extension Font: CSSValue {
 
-    public func renderCSSValue(environmentValues: EnvironmentValues) async -> String {
+    public func renderCSSValue(environmentValues: EnvironmentValues) -> String {
         name
     }
 }

@@ -23,35 +23,37 @@ public struct Image: View {
 
 extension Image: PrimitiveView {
 
-    func _render(options: RenderOptions, context: RenderContext) async -> RenderResult {
+    func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
         if source.darkURL != nil {
-            await context.globalStyle.insert(
-                key: "display",
-                value: "none",
-                selector: .className("_l", colorScheme: .dark)
-            )
-            await context.globalStyle.insert(
-                key: "display",
-                value: "none",
-                selector: .className("_d")
-            )
-            await context.globalStyle.insert(
-                key: "display",
-                value: "unset",
-                selector: .className("_d", colorScheme: .dark)
-            )
+            taskGroup.addTask {
+                await context.globalStyle.insert(
+                    key: "display",
+                    value: "none",
+                    selector: .className("_l", colorScheme: .dark)
+                )
+                await context.globalStyle.insert(
+                    key: "display",
+                    value: "none",
+                    selector: .className("_d")
+                )
+                await context.globalStyle.insert(
+                    key: "display",
+                    value: "unset",
+                    selector: .className("_d", colorScheme: .dark)
+                )
+            }
         }
 
         let borderStyle = context.environmentValues.borderStyle
         let needsRenderBorderStyle = context.renderedBorderStyle != borderStyle
 
-        return await _Image(
+        return _Image(
             source: source,
             idealWidth: idealWidth,
             idealHeight: idealHeight,
             borderStyle: needsRenderBorderStyle ? borderStyle : nil,
             environmentValues: context.environmentValues
-        ).render(options: options, context: context)
+        ).render(options: options, taskGroup: &taskGroup, context: context)
     }
 
     private struct _Image: View {
@@ -63,17 +65,15 @@ extension Image: PrimitiveView {
         let environmentValues: EnvironmentValues
 
         var body: some View {
-            get async {
-                if source.darkURL == nil {
-                    UnsafeNode(tag: "img", attributes: await attributes(isDark: false, includeClass: false))
-                } else {
-                    UnsafeNode(tag: "img", attributes: await attributes(isDark: false, includeClass: true))
-                    UnsafeNode(tag: "img", attributes: await attributes(isDark: true, includeClass: true))
-                }
+            if source.darkURL == nil {
+                UnsafeNode(tag: "img", attributes: attributes(isDark: false, includeClass: false))
+            } else {
+                UnsafeNode(tag: "img", attributes: attributes(isDark: false, includeClass: true))
+                UnsafeNode(tag: "img", attributes: attributes(isDark: true, includeClass: true))
             }
         }
 
-        private func attributes(isDark: Bool, includeClass: Bool) async -> UnsafeNode<EmptyView>.Attributes {
+        private func attributes(isDark: Bool, includeClass: Bool) -> UnsafeNode<EmptyView>.Attributes {
             var attributes: UnsafeNode<EmptyView>.Attributes = [:]
             if includeClass {
                 attributes.values["class"] = isDark ? "_d" : "_l"
@@ -97,7 +97,7 @@ extension Image: PrimitiveView {
             var style = ""
             if let borderStyle {
                 if !style.isEmpty { style += ";" }
-                style += "border:" + (await borderStyle.renderCSSValue(environmentValues: environmentValues))
+                style += "border:" + (borderStyle.renderCSSValue(environmentValues: environmentValues))
             }
             if let contentMode = environmentValues.contentMode {
                 if !style.isEmpty { style += ";" }

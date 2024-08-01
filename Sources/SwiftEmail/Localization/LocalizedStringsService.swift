@@ -1,6 +1,6 @@
 import Foundation
 
-actor LocalizedStringsService {
+final class LocalizedStringsService: Sendable {
 
     static let shared = LocalizedStringsService()
 
@@ -31,17 +31,20 @@ actor LocalizedStringsService {
     }
 
     private typealias StringsSet = [String: String]
-    private var stringsCache = [Locale: StringsSet]()
+    private let stringsCacheLock = NSLock()
+    private nonisolated(unsafe) var stringsCache = [Locale: StringsSet]()
 
     private func getStrings(bundle: Bundle, locale: Locale) -> StringsSet? {
-        if let cached = stringsCache[locale] {
-            return cached
+        stringsCacheLock.withLock {
+            if let cached = stringsCache[locale] {
+                return cached
+            }
+            let set = loadStrings(bundle: bundle, locale: locale)
+            if let set {
+                stringsCache[locale] = set
+            }
+            return set
         }
-        let set = loadStrings(bundle: bundle, locale: locale)
-        if let set {
-            stringsCache[locale] = set
-        }
-        return set
     }
 
     private nonisolated func loadStrings(bundle: Bundle, locale: Locale) -> StringsSet? {

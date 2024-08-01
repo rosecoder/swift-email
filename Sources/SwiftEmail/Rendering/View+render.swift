@@ -6,7 +6,11 @@ extension View {
         context.environmentValues.globalStyle = context.globalStyle
 
         // Render!
-        var result = await render(options: options, context: context)
+        var result = await withTaskGroup(of: Void.self) { group in
+            let result = render(options: options, taskGroup: &group, context: context)
+            await group.waitForAll()
+            return result
+        }
 
         // Adjust output for deferred components (like global styles)
         await deferred(result: &result, options: options, context: context)
@@ -22,12 +26,12 @@ extension View {
         return result
     }
 
-    func render(options: RenderOptions, context: RenderContext) async -> RenderResult {
+    func render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
         EnvironmentValues.current = context.environmentValues
         if let primitiveView = self as? PrimitiveView {
-            return await primitiveView._render(options: options, context: context)
+            return primitiveView._render(options: options, taskGroup: &taskGroup, context: context)
         }
-        return await body.render(options: options, context: context)
+        return body.render(options: options, taskGroup: &taskGroup, context: context)
     }
 
     private func deferred(result: inout RenderResult, options: RenderOptions, context: RenderContext) async {

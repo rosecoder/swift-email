@@ -11,29 +11,19 @@ extension UnsafeNode {
             self.values = .init(uniqueKeysWithValues: elements)
         }
 
-        func renderHTML(options: RenderOptions, context: RenderContext) async -> String {
+        func renderHTML(options: RenderOptions, context: RenderContext) -> String {
             if values.isEmpty {
                 return ""
             }
 
-            return await withTaskGroup(of: String.self) { group in
-                for (key, value) in values {
-                    group.addTask {
-                        key + "=\"" + (await value.renderValue(environmentValues: context.environmentValues)) + "\""
-                    }
-                }
+            let mapped = values
+                .map { $0 + "=\"" + ($1.renderValue(environmentValues: context.environmentValues)) + "\"" }
 
-                var outputs = [String]()
-                outputs.reserveCapacity(values.count)
-                for await result in group {
-                    outputs.append(result)
-                }
-                switch options.format {
-                case .compact:
-                    return " " + outputs.joined(separator: " ")
-                case .pretty:
-                    return " " + outputs.sorted().joined(separator: " ")
-                }
+            switch options.format {
+            case .compact:
+                return " " + mapped.joined(separator: " ")
+            case .pretty:
+                return " " + mapped.sorted().joined(separator: " ")
             }
         }
     }

@@ -24,7 +24,7 @@ public struct Color: ShapeStyle {
 
 extension Color: PrimitiveShapeStyle {
 
-    func renderRootCSSValue(environmentValues: EnvironmentValues) async -> String {
+    func renderRootCSSValue(environmentValues: EnvironmentValues) -> String {
         alternatives[environmentValues.colorScheme] ?? name
     }
 }

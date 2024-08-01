@@ -2,5 +2,5 @@ public protocol ShapeStyle: Hashable {
 
     associatedtype Resolved: ShapeStyle
 
-    func resolve(in environment: EnvironmentValues) async -> Resolved
+    func resolve(in environment: EnvironmentValues) -> Resolved
 }

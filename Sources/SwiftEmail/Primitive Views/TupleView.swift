@@ -19,24 +19,10 @@ public struct TupleView<Elements>: View, ParentableView {
 
 extension TupleView: PrimitiveView {
 
-    func _render(options: RenderOptions, context: RenderContext) async -> RenderResult {
-        let results = await withTaskGroup(of: (Int, RenderResult).self) { group in
-            for (index, element) in children.enumerated() {
-                group.addTask {
-                    (index, await element.render(options: options, context: context))
-                }
-            }
-
-            var results = [(Int, RenderResult)]()
-            results.reserveCapacity(children.count)
-            for await result in group {
-                results.append(result)
-            }
-            return results
-                .sorted(by: { $0.0 < $1.0 })
-                .map { $0.1 }
-                .filter { !$0.html.isEmpty }
-        }
+    func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
+        let results = children
+            .map { $0.render(options: options, taskGroup: &taskGroup, context: context) }
+            .filter { !$0.html.isEmpty }
 
         let text = results.map({ $0.text }).filter({ !$0.isEmpty }).joined(separator: context.textSeparator)
 

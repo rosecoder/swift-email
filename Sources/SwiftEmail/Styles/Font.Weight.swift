@@ -26,7 +26,7 @@ extension Font.Weight: Equatable {}
 
 extension Font.Weight: CSSValue {
 
-    public func renderCSSValue(environmentValues: EnvironmentValues) async -> String {
+    public func renderCSSValue(environmentValues: EnvironmentValues) -> String {
         switch self {
         case .black: "900"
         case .bold: "700"

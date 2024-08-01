@@ -26,7 +26,7 @@ public struct Text: View {
 
 extension Text: PrimitiveView {
 
-    func _render(options: RenderOptions, context: RenderContext) async -> RenderResult {
+    func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
         var context = context
         
         let font = context.environmentValues.font
@@ -59,11 +59,11 @@ extension Text: PrimitiveView {
         var style = ""
         if needsRenderBackgroundStyle {
             if !style.isEmpty { style += ";" }
-            style += "background:" + (await backgroundStyle.renderCSSValue(environmentValues: context.environmentValues))
+            style += "background:" + backgroundStyle.renderCSSValue(environmentValues: context.environmentValues)
         }
         if needsRenderForegroundStyle {
             if !style.isEmpty { style += ";" }
-            style += "color:" + (await foregroundStyle.renderCSSValue(environmentValues: context.environmentValues))
+            style += "color:" + foregroundStyle.renderCSSValue(environmentValues: context.environmentValues)
         }
         if needsRenderCornerRadius {
             if !style.isEmpty { style += ";" }
@@ -71,7 +71,7 @@ extension Text: PrimitiveView {
         }
         if needsRenderBorderStyle {
             if !style.isEmpty { style += ";" }
-            style += "border:" + (await borderStyle.renderCSSValue(environmentValues: context.environmentValues))
+            style += "border:" + borderStyle.renderCSSValue(environmentValues: context.environmentValues)
         }
         if needsRenderUnderline {
             if !style.isEmpty { style += ";" }
@@ -81,13 +81,13 @@ extension Text: PrimitiveView {
         // Rendering font may require inserts of multiple nodes for accessbility (bold and italic)
         if needsRenderFont {
             if !style.isEmpty { style += ";" }
-            return await body(
+            return body(
                 style: style,
                 classNames: classNames,
                 options: options,
                 context: context
             )
-            .render(options: options, context: context)
+            .render(options: options, taskGroup: &taskGroup, context: context)
         }
 
         // Wrap in span-node if any styling or class name needs to be applied
@@ -98,15 +98,15 @@ extension Text: PrimitiveView {
             if !classNames.isEmpty {
                 attributes.values["class"] = classNames.renderValue(options: options)
             }
-            return await UnsafeNode(tag: "span", attributes: attributes) {
-                PlainText(await getPlainString(context: context))
+            return UnsafeNode(tag: "span", attributes: attributes) {
+                PlainText(getPlainString(context: context))
             }
-            .render(options: options, context: context)
+            .render(options: options, taskGroup: &taskGroup, context: context)
         }
 
         // No styling, just return plain text
-        return await PlainText(getPlainString(context: context))
-            .render(options: options, context: context)
+        return PlainText(getPlainString(context: context))
+            .render(options: options, taskGroup: &taskGroup, context: context)
     }
 
     @ViewBuilder private func body(
@@ -114,10 +114,10 @@ extension Text: PrimitiveView {
         classNames: ClassNames,
         options: RenderOptions,
         context: RenderContext
-    ) async -> some View {
+    ) -> some View {
         let font = context.environmentValues.font
         let size: String = "\(font.size)px"
-        let weight: String = await font.weight.renderCSSValue(environmentValues: context.environmentValues)
+        let weight: String = font.weight.renderCSSValue(environmentValues: context.environmentValues)
         let name: String = font.name
         let isBold = font.weight.isBold
         let isItalic = font.isItalic
@@ -136,24 +136,24 @@ extension Text: PrimitiveView {
             }()
         }
         if isBold && isItalic {
-            await UnsafeNode(tag: "i") {
-                await UnsafeNode(tag: "b", attributes: attributes) {
-                    PlainText(await getPlainString(context: context))
+            UnsafeNode(tag: "i") {
+                UnsafeNode(tag: "b", attributes: attributes) {
+                    PlainText(getPlainString(context: context))
                 }
             }
         } else {
-            await UnsafeNode(tag: isBold ? "b" : isItalic ? "i" : "span", attributes: attributes) {
-                PlainText(await getPlainString(context: context))
+            UnsafeNode(tag: isBold ? "b" : isItalic ? "i" : "span", attributes: attributes) {
+                PlainText(getPlainString(context: context))
             }
         }
     }
 
-    private func getPlainString(context: RenderContext) async -> String {
+    private func getPlainString(context: RenderContext) -> String {
         switch storage {
         case .verbatim(let string):
             return string
         case .localized(let key, let bundle):
-            return await LocalizedStringsService.shared.translated(key: key, bundle: bundle ?? .main, locale: context.environmentValues.locale)
+            return LocalizedStringsService.shared.translated(key: key, bundle: bundle ?? .main, locale: context.environmentValues.locale)
         }
     }
 }

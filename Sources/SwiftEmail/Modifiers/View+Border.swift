@@ -50,16 +50,16 @@ public struct BorderShapeStyle<Style: ShapeStyle>: ShapeStyle {
     public let style: Style
     public let width: Float
 
-    public func resolve(in environment: EnvironmentValues) async -> Never {
+    public func resolve(in environment: EnvironmentValues) -> Never {
         noResolved
     }
 }
 
 extension BorderShapeStyle: PrimitiveShapeStyle {
 
-    func renderRootCSSValue(environmentValues: EnvironmentValues) async -> String {
+    func renderRootCSSValue(environmentValues: EnvironmentValues) -> String {
         let widthString = String(Int(width)) + "px"
-        let styleString = await style.renderCSSValue(environmentValues: environmentValues)
+        let styleString = style.renderCSSValue(environmentValues: environmentValues)
         return "\(widthString) solid \(styleString)"
     }
 }
