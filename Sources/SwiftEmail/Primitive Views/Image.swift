@@ -118,7 +118,7 @@ extension Image: PrimitiveView {
 
 extension Image {
 
-    public struct Source {
+    public struct Source: Sendable {
 
         public let defaultURL: String
         public let alternatives: [String: String]
