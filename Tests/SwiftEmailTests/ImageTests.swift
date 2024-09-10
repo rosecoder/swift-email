@@ -1,30 +1,31 @@
-import XCTest
+import Testing
 import SnapshotTesting
 import SwiftEmail
 import SwiftEmailTesting
 
-final class ImageTests: XCTestCase {
+@Suite
+struct ImageTests {
 
     private let url = "https://static.qualtive.io/notifier/logo.png"
 
-    func testRenderHTML() throws {
+    @Test func renderHTML() throws {
         let root = Image(url)
         assertSnapshot(of: root, as: .html)
     }
 
-    func testRenderHTMLWithFixedSize() throws {
+    @Test func renderHTMLWithFixedSize() throws {
         let root = Image(url)
             .frame(width: 500, height: 200)
         assertSnapshot(of: root, as: .html)
     }
 
-    func testRenderHTMLWithBorder() throws {
+    @Test func renderHTMLWithBorder() throws {
         let root = Image(url)
             .border(Color.red)
         assertSnapshot(of: root, as: .html)
     }
 
-    func testRenderHTMLWithScaledToFill() throws {
+    @Test func renderHTMLWithScaledToFill() throws {
         let root = Image(url)
             .frame(width: 500, height: 200)
             .scaledToFill()

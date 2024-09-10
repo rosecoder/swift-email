@@ -1,5 +1,4 @@
-import XCTest
-import SnapshotTesting
+import Testing
 import SwiftEmail
 
 private struct TestKey: EnvironmentKey {
@@ -24,21 +23,22 @@ private struct UsageView: View {
     }
 }
 
-final class EnvironmentTests: XCTestCase {
+@Suite
+struct EnvironmentTests {
 
-    func testEnvironmentDefaultUsage() async throws {
+    @Test func environmentDefaultUsage() async throws {
         let view = UsageView()
         let render = await view.render()
-        XCTAssertEqual(render.html, "Hello world!")
-        XCTAssertEqual(render.text, "Hello world!")
+        #expect(render.html == "Hello world!")
+        #expect(render.text == "Hello world!")
     }
 
     func testEnvironmentOverrideUsage() async throws {
         let view = UsageView()
             .environment(\.test, "Override!")
         let render = await view.render()
-        XCTAssertEqual(render.html, "Override!")
-        XCTAssertEqual(render.text, "Override!")
+        #expect(render.html == "Override!")
+        #expect(render.text == "Override!")
     }
 
     func testEnvironmentOverrideUsageMultipleAsync() async throws {
@@ -48,8 +48,8 @@ final class EnvironmentTests: XCTestCase {
                     let view = UsageView()
                         .environment(\.test, "Override \(index)")
                     let render = await view.render()
-                    XCTAssertEqual(render.html, "Override \(index)")
-                    XCTAssertEqual(render.text, "Override \(index)")
+                    #expect(render.html == "Override \(index)")
+                    #expect(render.text == "Override \(index)")
                 }
             }
         }

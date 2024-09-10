@@ -1,17 +1,18 @@
-import XCTest
+import Testing
 import SnapshotTesting
 import SwiftEmail
 import SwiftEmailTesting
 
-final class DividerTests: XCTestCase {
+@Suite
+struct DividerTests {
 
-    func testRender() async throws {
+    @Test func render() async throws {
         let render = await Divider().render()
-        XCTAssertEqual(render.html, "<hr style=\"border:0;border-top:1px solid #D6D3D4\"/>")
-        XCTAssertEqual(render.text, "\n")
+        #expect(render.html == "<hr style=\"border:0;border-top:1px solid #D6D3D4\"/>")
+        #expect(render.text == "\n")
     }
 
-    func testRenderWithColor() {
+    @Test func renderWithColor() async throws {
         let email = Email {
             Divider()
                 .overlay(Color.text)

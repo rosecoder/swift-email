@@ -1,4 +1,4 @@
-import XCTest
+import Testing
 import SnapshotTesting
 import SwiftEmail
 import SwiftEmailTesting
@@ -21,9 +21,10 @@ extension Image.Source {
     )
 }
 
-final class EmailTests: XCTestCase {
+@Suite
+struct EmailTests {
 
-    func testRender() throws {
+    @Test func render() async throws {
         let email = Email {
             VStack(alignment: .center) {
                 VStack(alignment: .leading) {

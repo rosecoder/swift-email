@@ -1,26 +1,28 @@
-import XCTest
+import Foundation
+import Testing
 import SnapshotTesting
 @testable import SwiftEmail
 
-final class LocalizationTests: XCTestCase {
+@Suite
+struct LocalizationTests {
 
-    func testTranslateStaticKey() async {
+    @Test func translateStaticKey() async {
         let english = LocalizedStringsService.shared.translated(
             key: "testing",
             bundle: .module,
             locale: Locale(identifier: "en_US")
         )
-        XCTAssertEqual(english, "Testing")
+        #expect(english == "Testing")
 
         let swedish = LocalizedStringsService.shared.translated(
             key: "testing",
             bundle: .module,
             locale: Locale(identifier: "sv_SE")
         )
-        XCTAssertEqual(swedish, "Testar")
+        #expect(swedish == "Testar")
     }
 
-    func testTranslateFormattedKey() async {
+    @Test func translateFormattedKey() async {
         let interpolationValue = "things!"
 
         let english = LocalizedStringsService.shared.translated(
@@ -28,17 +30,17 @@ final class LocalizationTests: XCTestCase {
             bundle: .module,
             locale: Locale(identifier: "en_US")
         )
-        XCTAssertEqual(english, "Testing things!")
+        #expect(english == "Testing things!")
 
         let swedish = LocalizedStringsService.shared.translated(
             key: "testing \(interpolationValue)",
             bundle: .module,
             locale: Locale(identifier: "sv_SE")
         )
-        XCTAssertEqual(swedish, "Testar things!")
+        #expect(swedish == "Testar things!")
     }
 
-    func testTranslateFormattedKeyFormatter() async {
+    @Test func translateFormattedKeyFormatter() async {
         let interpolationValue: NSNumber = 100
         let numberFormatter = NumberFormatter()
 
@@ -47,35 +49,35 @@ final class LocalizationTests: XCTestCase {
             bundle: .module,
             locale: Locale(identifier: "en_US")
         )
-        XCTAssertEqual(english, "Testing 100")
+        #expect(english == "Testing 100")
 
         let swedish = LocalizedStringsService.shared.translated(
             key: "testing \(interpolationValue, formatter: numberFormatter)",
             bundle: .module,
             locale: Locale(identifier: "sv_SE")
         )
-        XCTAssertEqual(swedish, "Testar 100")
+        #expect(swedish == "Testar 100")
     }
 
-    func testTextStaticKey() async {
+    @Test func textStaticKey() async {
         do {
             let render = await Text("testing", bundle: .module).environment(\.locale, Locale(identifier: "en")).render()
-            XCTAssertEqual(render.html, "Testing")
+            #expect(render.html == "Testing")
         }
         do {
             let render = await Text("testing", bundle: .module).environment(\.locale, Locale(identifier: "sv")).render()
-            XCTAssertEqual(render.html, "Testar")
+                #expect(render.html == "Testar")
         }
     }
 
-    func testTextFormattedKey() async {
+    @Test func textFormattedKey() async {
         do {
             let render = await Text("testing \("hello")", bundle: .module).environment(\.locale, Locale(identifier: "en")).render()
-            XCTAssertEqual(render.html, "Testing hello")
+            #expect(render.html == "Testing hello")
         }
         do {
             let render = await Text("testing \("hello")", bundle: .module).environment(\.locale, Locale(identifier: "sv")).render()
-            XCTAssertEqual(render.html, "Testar hello")
+            #expect(render.html == "Testar hello")
         }
     }
 }

@@ -1,18 +1,19 @@
-import XCTest
+import Testing
 import SnapshotTesting
 import SwiftEmail
 import SwiftEmailTesting
 
-final class NavigationLinkTests: XCTestCase {
+@Suite
+struct NavigationLinkTests {
 
-    func testNavigationLink() {
+    @Test func navigationLink() {
         let view = NavigationLink(url: "https://qualtive.io/") {
             Text("Link")
         }
         assertSnapshot(of: view, as: .html)
     }
 
-    func testNavigationLinkWithButtonStyle() {
+    @Test func navigationLinkWithButtonStyle() {
         let view = Email {
             NavigationLink(url: "https://qualtive.io/") {
                 Text("Link")

@@ -1,11 +1,12 @@
-import XCTest
+import Testing
 import SnapshotTesting
 import SwiftEmail
 import SwiftEmailTesting
 
-final class ForEachTests: XCTestCase {
+@Suite
+struct ForEachTests {
 
-    func testRenderHTML() throws {
+    @Test func testRenderHTML() throws {
         let array: [String] = [
             "A",
             "B",

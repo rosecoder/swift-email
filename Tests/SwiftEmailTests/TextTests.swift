@@ -1,96 +1,97 @@
-import XCTest
+import Testing
 import SwiftEmail
 
-final class TextTests: XCTestCase {
+@Suite
+struct TextTests {
 
-    func testRenderHTML() async throws {
+    @Test func renderHTML() async throws {
         let render = await Text("Hello world!").render()
-        XCTAssertEqual(render.html, "Hello world!")
+        #expect(render.html == "Hello world!")
     }
 
-    func testRenderHTMLWithNewline() async throws {
+    @Test func renderHTMLWithNewline() async throws {
         let render = await Text("Hello\nworld!").render()
-        XCTAssertEqual(render.html, "Hello<br/>world!")
-        XCTAssertEqual(render.text, "Hello\nworld!")
+        #expect(render.html == "Hello<br/>world!")
+        #expect(render.text == "Hello\nworld!")
     }
 
-    func testRenderHTMLEscapeCharacters() async throws {
+    @Test func renderHTMLEscapeCharacters() async throws {
         do {
             let render = await Text("<script>alert('XSS')</script>").render()
-            XCTAssertEqual(
-                render.html,
+            #expect(
+                render.html ==
                 "&lt;script&gt;alert(&#39;XSS&#39;)&lt;/script&gt;"
             )
         }
         do {
             let render = await Text("<a href='javascript:alert(\"XSS\")'>Click me</a>").render()
-            XCTAssertEqual(
-                render.html,
+            #expect(
+                render.html ==
                 "&lt;a href=&#39;javascript:alert(&quot;XSS&quot;)&#39;&gt;Click me&lt;/a&gt;"
             )
         }
         do {
             let render = await Text("<img src=x onerror=alert('XSS')>").render()
-            XCTAssertEqual(
-                render.html,
+            #expect(
+                render.html ==
                 "&lt;img src=x onerror=alert(&#39;XSS&#39;)&gt;"
             )
         }
         do {
             let render = await Text("<ScRiPt>alert('XSS')</ScRiPt>").render()
-            XCTAssertEqual(
-                render.html,
+            #expect(
+                render.html ==
                 "&lt;ScRiPt&gt;alert(&#39;XSS&#39;)&lt;/ScRiPt&gt;"
             )
         }
     }
 
-    func testFontBold() async throws {
+    @Test func fontBold() async throws {
         let render = await Text("Hello world!")
             .font(Font.helveticaNeue.bold())
             .render()
-        XCTAssertEqual(render.html, "<b style=\"font-size:16px;font-weight:700;font-family:'Helvetica Neue', Helvetica, Arial, Verdana, sans-serif\">Hello world!</b>")
+        #expect(render.html == "<b style=\"font-size:16px;font-weight:700;font-family:'Helvetica Neue', Helvetica, Arial, Verdana, sans-serif\">Hello world!</b>")
     }
 
-    func testFontItalic() async throws {
+    @Test func fontItalic() async throws {
         let render = await Text("Hello world!")
             .font(Font.helveticaNeue.italic())
             .render()
-        XCTAssertEqual(render.html, "<i style=\"font-size:16px;font-weight:400;font-family:'Helvetica Neue', Helvetica, Arial, Verdana, sans-serif;font-style:italic\">Hello world!</i>")
+        #expect(render.html == "<i style=\"font-size:16px;font-weight:400;font-family:'Helvetica Neue', Helvetica, Arial, Verdana, sans-serif;font-style:italic\">Hello world!</i>")
     }
 
-    func testFontBoldAndItalic() async throws {
+    @Test func fontBoldAndItalic() async throws {
         let render = await Text("Hello world!")
             .font(Font.helveticaNeue.bold().italic())
             .render()
-        XCTAssertEqual(render.html, "<i><b style=\"font-size:16px;font-weight:700;font-family:'Helvetica Neue', Helvetica, Arial, Verdana, sans-serif;font-style:italic\">Hello world!</b></i>")
+        #expect(render.html == "<i><b style=\"font-size:16px;font-weight:700;font-family:'Helvetica Neue', Helvetica, Arial, Verdana, sans-serif;font-style:italic\">Hello world!</b></i>")
     }
 
-    func testForegroundStyle() async throws {
+    @Test func foregroundStyle() async throws {
         let render = await Text("Hello world!")
             .foregroundStyle(Color.red)
             .render()
-        XCTAssertEqual(render.html, "<span style=\"color:#f00\">Hello world!</span>")
+        #expect(render.html == "<span style=\"color:#f00\">Hello world!</span>")
     }
 
-    func testBackground() async throws {
+    @Test func background() async throws {
         let render = await Text("Hello world!")
             .background(Color.blue)
             .render()
-        XCTAssertEqual(render.html, "<span style=\"background:#00f\">Hello world!</span>")
+        #expect(render.html == "<span style=\"background:#00f\">Hello world!</span>")
     }
 
-    func testBorder() async throws {
+    @Test func border() async throws {
         let render = await Text("Hello world!")
             .border(Color.green, width: 4)
             .render()
-        XCTAssertEqual(render.html, "<span style=\"border:4px solid #0f0\">Hello world!</span>")
+        #expect(render.html == "<span style=\"border:4px solid #0f0\">Hello world!</span>")
     }
 
-    func testUnderline() async throws {
+    @Test func underline() async throws {
         let render = await Text("Hello world!")
             .underline()
             .render()
-        XCTAssertEqual(render.html, "<span style=\"text-decoration:underline\">Hello world!</span>")
+        #expect(render.html == "<span style=\"text-decoration:underline\">Hello world!</span>")
     }
 }

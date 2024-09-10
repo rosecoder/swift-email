@@ -1,7 +1,8 @@
-import XCTest
+import Testing
 import SwiftEmail
 
-final class ViewBuilderTests: XCTestCase {
+@Suite
+struct ViewBuilderTests {
 
     struct Root<Content: View>: View {
 
@@ -14,53 +15,53 @@ final class ViewBuilderTests: XCTestCase {
         var body: some View { content }
     }
 
-    func testEmpty() async throws {
+    @Test func empty() async throws {
         let view = Root {
             // Empty
         }
         let render = await view.render()
-        XCTAssertEqual(render.html, "")
+        #expect(render.html == "")
     }
 
-    func testSingleView() async throws {
+    @Test func singleView() async throws {
         let view = Root {
             Text("Hello world!")
         }
         let render = await view.render()
-        XCTAssertEqual(render.html, "Hello world!")
+        #expect(render.html == "Hello world!")
     }
 
-    func testMultipleView() async throws {
+    @Test func multipleView() async throws {
         let view = Root {
             Text("Hello")
             Text(" ")
             Text("world!")
         }
         let render = await view.render()
-        XCTAssertEqual(render.html, "Hello world!")
+        #expect(render.html == "Hello world!")
     }
 
-    func testConditionalTrue() async throws {
+    @Test func conditionalTrue() async throws {
         let view = Root {
             if "a" == "a" {
                 Text("Hello world!")
             }
         }
         let render = await view.render()
-        XCTAssertEqual(render.html, "Hello world!")
+        #expect(render.html == "Hello world!")
     }
 
-    func testConditionalFalse() async throws {
+    @Test func conditionalFalse() async throws {
         let view = Root {
             if "a" == "b" {
                 Text("Hello world!")
             }
         }
         let render = await view.render()
-        XCTAssertEqual(render.html, "")
+        #expect(render.html == "")
     }
 
-    func testConditionalTrueOrFalse() async throws {
+    @Test func conditionalTrueOrFalse() async throws {
         let view = Root {
             if "a" == "a" {
                 Text("Hello")
@@ -69,10 +70,10 @@ final class ViewBuilderTests: XCTestCase {
             }
         }
         let render = await view.render()
-        XCTAssertEqual(render.html, "Hello")
+        #expect(render.html == "Hello")
     }
 
-    func testConditionalFalseOrTrue() async throws {
+    @Test func conditionalFalseOrTrue() async throws {
         let view = Root {
             if "a" == "b" {
                 Text("Hello")
@@ -81,16 +82,16 @@ final class ViewBuilderTests: XCTestCase {
             }
         }
         let render = await view.render()
-        XCTAssertEqual(render.html, "world!")
+        #expect(render.html == "world!")
     }
 
-    func testLimitedAvailability() async throws {
+    @Test func limitedAvailability() async throws {
         let view = Root {
             if #available(macOS 10.0, *) {
                 Text("Hello world!")
             }
         }
         let render = await view.render()
-        XCTAssertEqual(render.html, "Hello world!")
+        #expect(render.html == "Hello world!")
     }
 }
