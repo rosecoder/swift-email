@@ -1,4 +1,4 @@
-// swift-tools-version: 5.10
+// swift-tools-version: 6.0
 
 import PackageDescription
 
@@ -19,19 +19,24 @@ let package = Package(
     targets: [
         .target(name: "SwiftEmail", dependencies: [
             .product(name: "Crypto", package: "swift-crypto"),
-        ], swiftSettings: [
-            .enableExperimentalFeature("StrictConcurrency"),
         ]),
         .target(name: "SwiftEmailTesting", dependencies: [
             "SwiftEmail",
             .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
         ]),
-        .testTarget(name: "SwiftEmailTests", dependencies: [
-            "SwiftEmail",
-            "SwiftEmailTesting",
-            .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
-        ], resources: [
-            .process("Resources/"),
-        ]),
+        .testTarget(
+            name: "SwiftEmailTests",
+            dependencies: [
+                "SwiftEmail",
+                "SwiftEmailTesting",
+                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+            ],
+            exclude: [
+                "__Snapshots__/"
+            ],
+            resources: [
+                .process("Resources/"),
+            ]
+        ),
     ]
 )
