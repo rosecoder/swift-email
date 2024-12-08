@@ -1,6 +1,6 @@
 protocol PrimitiveView {
 
-    func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult
+    func _render(options: RenderOptions, context: RenderContext) -> RenderResult
 }
 
 extension PrimitiveView {

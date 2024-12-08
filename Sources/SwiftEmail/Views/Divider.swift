@@ -25,7 +25,7 @@ extension Divider {
 
 extension Divider: PrimitiveView {
 
-    func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
+    func _render(options: RenderOptions, context: RenderContext) -> RenderResult {
         let node = if let className {
             AnyView(
                 UnsafeNode(tag: "hr", attributes: [
@@ -41,7 +41,7 @@ extension Divider: PrimitiveView {
         }
 
         return .init(
-            html: node.render(options: options, taskGroup: &taskGroup, context: context).html,
+            html: node.render(options: options, context: context).html,
             text: "\n"
         )
     }

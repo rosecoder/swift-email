@@ -26,7 +26,7 @@ public struct Text: View {
 
 extension Text: PrimitiveView {
 
-    func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
+    func _render(options: RenderOptions, context: RenderContext) -> RenderResult {
         var context = context
         
         let font = context.environmentValues.font
@@ -87,7 +87,7 @@ extension Text: PrimitiveView {
                 options: options,
                 context: context
             )
-            .render(options: options, taskGroup: &taskGroup, context: context)
+            .render(options: options, context: context)
         }
 
         // Wrap in span-node if any styling or class name needs to be applied
@@ -101,12 +101,12 @@ extension Text: PrimitiveView {
             return UnsafeNode(tag: "span", attributes: attributes) {
                 PlainText(getPlainString(context: context))
             }
-            .render(options: options, taskGroup: &taskGroup, context: context)
+            .render(options: options, context: context)
         }
 
         // No styling, just return plain text
         return PlainText(getPlainString(context: context))
-            .render(options: options, taskGroup: &taskGroup, context: context)
+            .render(options: options, context: context)
     }
 
     @ViewBuilder private func body(

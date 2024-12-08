@@ -15,7 +15,7 @@ public struct AnyView: View {
 
 extension AnyView: PrimitiveView {
 
-    func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
-        (content as! any View).render(options: options, taskGroup: &taskGroup, context: context)
+    func _render(options: RenderOptions, context: RenderContext) -> RenderResult {
+        (content as! any View).render(options: options, context: context)
     }
 }

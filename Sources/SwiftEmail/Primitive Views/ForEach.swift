@@ -13,9 +13,9 @@ public struct ForEach<Data: RandomAccessCollection, Content: View>: View {
 
 extension ForEach: PrimitiveView {
 
-    func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
+    func _render(options: RenderOptions, context: RenderContext) -> RenderResult {
         let results = elements.map {
-            content($0).render(options: options, taskGroup: &taskGroup, context: context)
+            content($0).render(options: options, context: context)
         }
 
         let text = results.map({ $0.text }).filter({ !$0.isEmpty }).joined(separator: context.textSeparator)

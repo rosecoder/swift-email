@@ -7,7 +7,7 @@ public struct EmptyView: View {
 
 extension EmptyView: PrimitiveView {
 
-    func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
+    func _render(options: RenderOptions, context: RenderContext) -> RenderResult {
         .init(html: "", text: "")
     }
 }

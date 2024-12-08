@@ -1,4 +1,4 @@
-public actor GlobalStyle: View {
+public final class GlobalStyle: View {
 
     var selectors: [CSSSelector: Styles] = [:]
 
@@ -16,7 +16,7 @@ public actor GlobalStyle: View {
 
 private struct GlobalStyleKey: EnvironmentKey {
 
-    static let defaultValue: GlobalStyle = .init()
+    static var defaultValue: GlobalStyle { .init() }
 }
 
 extension EnvironmentValues {
@@ -31,22 +31,18 @@ private let deferredConstant = "ef2993441110ac1c38501cf51009ce85"
 
 extension GlobalStyle: PrimitiveView {
 
-    nonisolated func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
+    nonisolated func _render(options: RenderOptions, context: RenderContext) -> RenderResult {
         .init(html: deferredConstant, text: "")
     }
 
-    nonisolated func renderRootHTMLDeferred(result: inout RenderResult, options: RenderOptions, context: RenderContext) async {
-        let content = await contentWithStyle(options: options, context: context)
-        let output = await withTaskGroup(of: Void.self) { group in
-            let output = content.render(options: options, taskGroup: &group, context: context).html
-            await group.waitForAll()
-            return output
-        }
+    nonisolated func renderRootHTMLDeferred(result: inout RenderResult, options: RenderOptions, context: RenderContext) {
+        let content = contentWithStyle(options: options, context: context)
+        let output = content.render(options: options, context: context).html
         result.html = result.html.replacingOccurrences(of: deferredConstant, with: output)
     }
 
-    @ViewBuilder private nonisolated func contentWithStyle(options: RenderOptions, context: RenderContext) async -> some View {
-        let selectors = await selectors
+    @ViewBuilder private func contentWithStyle(options: RenderOptions, context: RenderContext) -> some View {
+        let selectors = selectors
         UnsafeNode(tag: "style") {
             UnsafePlainText(".ExternalClass {width:100%;}")
 

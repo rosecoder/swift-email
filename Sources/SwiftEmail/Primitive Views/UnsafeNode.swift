@@ -27,7 +27,7 @@ extension UnsafeNode where Content == EmptyView {
 
 extension UnsafeNode: PrimitiveView {
 
-    func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
+    func _render(options: RenderOptions, context: RenderContext) -> RenderResult {
         let indentation = context.indentation(options: options)
         switch self {
         case .html(let html):
@@ -58,7 +58,7 @@ extension UnsafeNode: PrimitiveView {
             let attributesString = attributes.renderHTML(options: options, context: context)
 
             context.indentationLevel += 1
-            let content = content.render(options: options, taskGroup: &taskGroup, context: context)
+            let content = content.render(options: options, context: context)
 
             switch options.format {
             case .compact:

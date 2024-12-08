@@ -12,16 +12,11 @@ extension Snapshotting where Value: View, Format == String {
         format: RenderOptions.Format = .pretty,
         indent: String = "  "
     ) -> Snapshotting {
-        var snapshotting = SimplySnapshotting.lines.asyncPullback { (view: Value) in
-            Async { callback in
-                Task {
-                    let result = await view.render(options: .init(
-                        format: format,
-                        indent: indent
-                    ))
-                    callback(result.html)
-                }
-            }
+        var snapshotting = SimplySnapshotting.lines.pullback { (view: Value) in
+            view.render(options: RenderOptions(
+                format: format,
+                indent: indent
+            )).html
         }
         snapshotting.pathExtension = "html"
         return snapshotting

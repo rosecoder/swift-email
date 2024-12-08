@@ -66,8 +66,8 @@ struct AnyLayoutableView: View, LayoutableView {
 
 extension AnyLayoutableView: PrimitiveView {
 
-    func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
-        (content as! any View).render(options: options, taskGroup: &taskGroup, context: context)
+    func _render(options: RenderOptions, context: RenderContext) -> RenderResult {
+        (content as! any View).render(options: options, context: context)
     }
 }
 
@@ -268,7 +268,7 @@ struct LayoutView<Content: View>: View {
 
 extension LayoutView: PrimitiveView {
 
-    func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
+    func _render(options: RenderOptions, context: RenderContext) -> RenderResult {
         var context = context
         context.textSeparator = properties.textSeparator
 
@@ -290,6 +290,6 @@ extension LayoutView: PrimitiveView {
             cornerRadius: cornerRadius,
             borderStyle: borderStyle,
             options: options
-        ).render(options: options, taskGroup: &taskGroup, context: context)
+        ).render(options: options, context: context)
     }
 }

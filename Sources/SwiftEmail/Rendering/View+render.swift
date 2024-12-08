@@ -1,19 +1,15 @@
 extension View {
 
-    public func render(options: RenderOptions = .init()) async -> RenderResult {
+    public func render(options: RenderOptions = .init()) -> RenderResult {
         var context = RenderContext()
         context.environmentValues.renderOptions = options
         context.environmentValues.globalStyle = context.globalStyle
 
         // Render!
-        var result = await withTaskGroup(of: Void.self) { group in
-            let result = render(options: options, taskGroup: &group, context: context)
-            await group.waitForAll()
-            return result
-        }
+        var result = render(options: options, context: context)
 
         // Adjust output for deferred components (like global styles)
-        await deferred(result: &result, options: options, context: context)
+        deferred(result: &result, options: options, context: context)
 
         // Suffix
         switch options.format {
@@ -26,16 +22,16 @@ extension View {
         return result
     }
 
-    func render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
+    func render(options: RenderOptions, context: RenderContext) -> RenderResult {
         EnvironmentValues.current = context.environmentValues
         if let primitiveView = self as? PrimitiveView {
-            return primitiveView._render(options: options, taskGroup: &taskGroup, context: context)
+            return primitiveView._render(options: options, context: context)
         }
-        return body.render(options: options, taskGroup: &taskGroup, context: context)
+        return body.render(options: options, context: context)
     }
 
-    private func deferred(result: inout RenderResult, options: RenderOptions, context: RenderContext) async {
-        await context.globalStyle.renderRootHTMLDeferred(
+    private func deferred(result: inout RenderResult, options: RenderOptions, context: RenderContext) {
+        context.globalStyle.renderRootHTMLDeferred(
             result: &result,
             options: options,
             context: context

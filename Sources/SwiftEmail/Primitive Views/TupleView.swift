@@ -19,9 +19,9 @@ public struct TupleView<Elements>: View, ParentableView {
 
 extension TupleView: PrimitiveView {
 
-    func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
+    func _render(options: RenderOptions, context: RenderContext) -> RenderResult {
         let results = children
-            .map { $0.render(options: options, taskGroup: &taskGroup, context: context) }
+            .map { $0.render(options: options, context: context) }
             .filter { !$0.html.isEmpty }
 
         let text = results.map({ $0.text }).filter({ !$0.isEmpty }).joined(separator: context.textSeparator)

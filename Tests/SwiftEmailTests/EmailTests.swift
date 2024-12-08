@@ -24,7 +24,7 @@ extension Image.Source {
 @Suite
 struct EmailTests {
 
-    @Test func render() async throws {
+    @Test func render() {
         let email = Email {
             VStack(alignment: .center) {
                 VStack(alignment: .leading) {

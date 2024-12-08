@@ -15,53 +15,53 @@ struct ViewBuilderTests {
         var body: some View { content }
     }
 
-    @Test func empty() async throws {
+    @Test func empty() {
         let view = Root {
             // Empty
         }
-        let render = await view.render()
+        let render = view.render()
         #expect(render.html == "")
     }
 
-    @Test func singleView() async throws {
+    @Test func singleView() {
         let view = Root {
             Text("Hello world!")
         }
-        let render = await view.render()
+        let render = view.render()
         #expect(render.html == "Hello world!")
     }
 
-    @Test func multipleView() async throws {
+    @Test func multipleView() {
         let view = Root {
             Text("Hello")
             Text(" ")
             Text("world!")
         }
-        let render = await view.render()
+        let render = view.render()
         #expect(render.html == "Hello world!")
     }
 
-    @Test func conditionalTrue() async throws {
+    @Test func conditionalTrue() {
         let view = Root {
             if "a" == "a" {
                 Text("Hello world!")
             }
         }
-        let render = await view.render()
+        let render = view.render()
         #expect(render.html == "Hello world!")
     }
 
-    @Test func conditionalFalse() async throws {
+    @Test func conditionalFalse() {
         let view = Root {
             if "a" == "b" {
                 Text("Hello world!")
             }
         }
-        let render = await view.render()
+        let render = view.render()
         #expect(render.html == "")
     }
 
-    @Test func conditionalTrueOrFalse() async throws {
+    @Test func conditionalTrueOrFalse() {
         let view = Root {
             if "a" == "a" {
                 Text("Hello")
@@ -69,11 +69,11 @@ struct ViewBuilderTests {
                 Text("world!")
             }
         }
-        let render = await view.render()
+        let render = view.render()
         #expect(render.html == "Hello")
     }
 
-    @Test func conditionalFalseOrTrue() async throws {
+    @Test func conditionalFalseOrTrue() {
         let view = Root {
             if "a" == "b" {
                 Text("Hello")
@@ -81,17 +81,17 @@ struct ViewBuilderTests {
                 Text("world!")
             }
         }
-        let render = await view.render()
+        let render = view.render()
         #expect(render.html == "world!")
     }
 
-    @Test func limitedAvailability() async throws {
+    @Test func limitedAvailability() {
         let view = Root {
             if #available(macOS 10.0, *) {
                 Text("Hello world!")
             }
         }
-        let render = await view.render()
+        let render = view.render()
         #expect(render.html == "Hello world!")
     }
 }

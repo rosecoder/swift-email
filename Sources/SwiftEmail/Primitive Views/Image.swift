@@ -23,25 +23,18 @@ public struct Image: View {
 
 extension Image: PrimitiveView {
 
-    func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
+    func _render(options: RenderOptions, context: RenderContext) -> RenderResult {
         if source.darkURL != nil {
-            taskGroup.addTask { [globalStyle = context.globalStyle] in
-                await globalStyle.insert(
-                    key: "display",
-                    value: "none",
-                    selector: .className("_l", colorScheme: .dark)
-                )
-                await globalStyle.insert(
-                    key: "display",
-                    value: "none",
-                    selector: .className("_d")
-                )
-                await globalStyle.insert(
-                    key: "display",
-                    value: "unset",
-                    selector: .className("_d", colorScheme: .dark)
-                )
-            }
+            context.globalStyle.insert(
+                key: "display",
+                value: "none",
+                selector: .className("_l", colorScheme: .dark)
+            )
+            context.globalStyle.insert(
+                key: "display",
+                value: "none",
+                selector: .className("_d")
+            )
         }
 
         let borderStyle = context.environmentValues.borderStyle
@@ -53,7 +46,7 @@ extension Image: PrimitiveView {
             idealHeight: idealHeight,
             borderStyle: needsRenderBorderStyle ? borderStyle : nil,
             environmentValues: context.environmentValues
-        ).render(options: options, taskGroup: &taskGroup, context: context)
+        ).render(options: options, context: context)
     }
 
     private struct _Image: View {

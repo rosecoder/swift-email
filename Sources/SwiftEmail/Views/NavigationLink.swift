@@ -32,18 +32,18 @@ extension NavigationLink.Destination: UnsafeNodeAttributesValue {
 
 extension NavigationLink: PrimitiveView {
 
-    func _render(options: RenderOptions, taskGroup: inout TaskGroup<Void>, context: RenderContext) -> RenderResult {
+    func _render(options: RenderOptions, context: RenderContext) -> RenderResult {
         var styles = Styles()
         if !(context.environmentValues.buttonStyle.content is LinkButtonStyle) {
             styles["text-decoration"] = "none" // Underline can be added through .underline() in the button style itself
         }
         styles["color"] = context.environmentValues.foregroundStyle
 
-        taskGroup.addTask { [globalStyle = context.environmentValues.globalStyle, foregroundStyle = context.environmentValues.foregroundStyle] in
-            if (foregroundStyle.content as? Color)?.hasAlternative != false {
-                await globalStyle.insert(key: "color", value: foregroundStyle, selector: .element("a", colorScheme: .dark))
-            }
-        }
+        context.globalStyle.insert(
+            key: "color",
+            value: context.environmentValues.foregroundStyle,
+            selector: .element("a", colorScheme: .dark)
+        )
 
         return UnsafeNode(tag: "a", attributes: [
             "href": destination,
@@ -53,6 +53,6 @@ extension NavigationLink: PrimitiveView {
                 label: AnyButtonStyle.Configuration.Label(label)
             ))
         }
-        .render(options: options, taskGroup: &taskGroup, context: context)
+        .render(options: options, context: context)
     }
 }

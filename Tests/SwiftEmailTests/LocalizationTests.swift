@@ -6,7 +6,7 @@ import SnapshotTesting
 @Suite
 struct LocalizationTests {
 
-    @Test func translateStaticKey() async {
+    @Test func translateStaticKey() {
         let english = LocalizedStringsService.shared.translated(
             key: "testing",
             bundle: .module,
@@ -22,7 +22,7 @@ struct LocalizationTests {
         #expect(swedish == "Testar")
     }
 
-    @Test func translateFormattedKey() async {
+    @Test func translateFormattedKey() {
         let interpolationValue = "things!"
 
         let english = LocalizedStringsService.shared.translated(
@@ -40,7 +40,7 @@ struct LocalizationTests {
         #expect(swedish == "Testar things!")
     }
 
-    @Test func translateFormattedKeyFormatter() async {
+    @Test func translateFormattedKeyFormatter() {
         let interpolationValue: NSNumber = 100
         let numberFormatter = NumberFormatter()
 
@@ -59,24 +59,24 @@ struct LocalizationTests {
         #expect(swedish == "Testar 100")
     }
 
-    @Test func textStaticKey() async {
+    @Test func textStaticKey() {
         do {
-            let render = await Text("testing", bundle: .module).environment(\.locale, Locale(identifier: "en")).render()
+            let render = Text("testing", bundle: .module).environment(\.locale, Locale(identifier: "en")).render()
             #expect(render.html == "Testing")
         }
         do {
-            let render = await Text("testing", bundle: .module).environment(\.locale, Locale(identifier: "sv")).render()
+            let render = Text("testing", bundle: .module).environment(\.locale, Locale(identifier: "sv")).render()
                 #expect(render.html == "Testar")
         }
     }
 
-    @Test func textFormattedKey() async {
+    @Test func textFormattedKey() {
         do {
-            let render = await Text("testing \("hello")", bundle: .module).environment(\.locale, Locale(identifier: "en")).render()
+            let render = Text("testing \("hello")", bundle: .module).environment(\.locale, Locale(identifier: "en")).render()
             #expect(render.html == "Testing hello")
         }
         do {
-            let render = await Text("testing \("hello")", bundle: .module).environment(\.locale, Locale(identifier: "sv")).render()
+            let render = Text("testing \("hello")", bundle: .module).environment(\.locale, Locale(identifier: "sv")).render()
             #expect(render.html == "Testar hello")
         }
     }

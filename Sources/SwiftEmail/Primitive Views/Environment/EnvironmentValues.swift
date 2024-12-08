@@ -1,8 +1,8 @@
 import Foundation
 
-public struct EnvironmentValues: Sendable {
+public struct EnvironmentValues {
 
-    var overrides = [String: any Sendable]()
+    var overrides = [String: Any]()
 
     public subscript<K: EnvironmentKey>(key: K.Type) -> K.Value {
         get {
@@ -16,7 +16,7 @@ public struct EnvironmentValues: Sendable {
         }
     }
 
-    static let `default`: EnvironmentValues = EnvironmentValues()
+    static var `default`: EnvironmentValues { .init() }
 
     static var current: EnvironmentValues {
         get {
