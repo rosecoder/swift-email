@@ -51,8 +51,11 @@ final class LocalizedStringsService: Sendable {
   private nonisolated func loadStrings(bundle: Bundle, locale: Locale) -> StringsSet? {
     guard
       let path = bundle.path(
-        forResource: "Localizable", ofType: "strings", inDirectory: nil,
-        forLocalization: locale.languageCode)
+        forResource: "Localizable",
+        ofType: "strings",
+        inDirectory: nil,
+        forLocalization: locale.language.languageCode?.identifier
+      )
     else {
       return nil
     }

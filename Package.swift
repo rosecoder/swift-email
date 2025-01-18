@@ -6,7 +6,7 @@ let package = Package(
   name: "SwiftEmail",
   defaultLocalization: "en",
   platforms: [
-    .macOS("12.0")
+    .macOS(.v15)
   ],
   products: [
     .library(name: "SwiftEmail", targets: ["SwiftEmail"]),
