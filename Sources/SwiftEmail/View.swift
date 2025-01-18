@@ -1,6 +1,6 @@
 public protocol View {
 
-    associatedtype Body: View
+  associatedtype Body: View
 
-    @ViewBuilder var body: Body { get }
+  @ViewBuilder var body: Body { get }
 }

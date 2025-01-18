@@ -1,4 +1,4 @@
 protocol ParentableView {
 
-    var children: [AnyView] { get }
+  var children: [AnyView] { get }
 }

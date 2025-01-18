@@ -1,8 +1,8 @@
 extension Never: View {
 
-    public typealias Body = Never
+  public typealias Body = Never
 
-    public var body: Never {
-        fatalError()
-    }
+  public var body: Never {
+    fatalError()
+  }
 }

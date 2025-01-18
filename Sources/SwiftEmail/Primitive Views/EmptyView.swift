@@ -1,13 +1,13 @@
 public struct EmptyView: View {
 
-    public init() {}
+  public init() {}
 
-    public var body: Never { noBody }
+  public var body: Never { noBody }
 }
 
 extension EmptyView: PrimitiveView {
 
-    func _render(options: RenderOptions, context: RenderContext) -> RenderResult {
-        .init(html: "", text: "")
-    }
+  func _render(options: RenderOptions, context: RenderContext) -> RenderResult {
+    .init(html: "", text: "")
+  }
 }

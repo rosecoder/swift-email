@@ -1,6 +1,6 @@
 public enum ColorScheme: Sendable {
-    case light
-    case dark
+  case light
+  case dark
 }
 
 extension ColorScheme: Hashable {}
@@ -9,20 +9,20 @@ extension ColorScheme: CaseIterable {}
 
 extension ColorScheme {
 
-    func renderCSS() -> String {
-        switch self {
-        case .light: "light"
-        case .dark: "dark"
-        }
+  func renderCSS() -> String {
+    switch self {
+    case .light: "light"
+    case .dark: "dark"
     }
+  }
 }
 
 extension ColorScheme: CustomDebugStringConvertible {
 
-    public var debugDescription: String {
-        switch self {
-        case .light: "ColorScheme.light"
-        case .dark: "ColorScheme.dark"
-        }
+  public var debugDescription: String {
+    switch self {
+    case .light: "ColorScheme.light"
+    case .dark: "ColorScheme.dark"
     }
+  }
 }
