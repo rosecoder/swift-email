@@ -1,13 +1,17 @@
-public final class GlobalStyle: View {
+import Synchronization
 
-  var selectors: [CSSSelector: Styles] = [:]
+public final class GlobalStyle: View, Sendable {
+
+  let selectors = Mutex<[CSSSelector: Styles]>([:])
 
   func insert(key: String, value: CSSValue, selector: CSSSelector) {
-    if var values = selectors[selector] {
-      values[key] = value
-      selectors[selector] = values
-    } else {
-      selectors[selector] = Styles(properties: [key: value])
+    selectors.withLock {
+      if var values = $0[selector] {
+        values[key] = value
+        $0[selector] = values
+      } else {
+        $0[selector] = Styles(properties: [key: value])
+      }
     }
   }
 
@@ -46,7 +50,7 @@ extension GlobalStyle: PrimitiveView {
   @ViewBuilder private func contentWithStyle(options: RenderOptions, context: RenderContext)
     -> some View
   {
-    let selectors = selectors
+    let selectors = selectors.withLock { $0 }
     UnsafeNode(tag: "style") {
       UnsafePlainText(".ExternalClass {width:100%;}")
 

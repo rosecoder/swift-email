@@ -1,4 +1,4 @@
-struct Styles {
+struct Styles: Sendable {
 
   var properties: [String: CSSValue]
 
