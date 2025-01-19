@@ -1,4 +1,5 @@
 import Foundation
+import Synchronization
 
 final class LocalizedStringsService: Sendable {
 
@@ -30,22 +31,28 @@ final class LocalizedStringsService: Sendable {
     return String(format: translated, arguments: key.interpolationValues)
   }
 
+  private struct CacheKey: Hashable {
+
+    let bundle: Bundle
+    let locale: Locale
+  }
+
   private typealias StringsSet = [String: String]
-  private let stringsCacheLock = NSLock()
-  private nonisolated(unsafe) var stringsCache = [Locale: StringsSet]()
+
+  private let stringsCache = Mutex<[CacheKey: StringsSet]>([:])
 
   private func getStrings(bundle: Bundle, locale: Locale) -> StringsSet? {
-    stringsCacheLock.lock()
-    defer { stringsCacheLock.unlock() }
-
-    if let cached = stringsCache[locale] {
-      return cached
+    stringsCache.withLock {
+      let cacheKey = CacheKey(bundle: bundle, locale: locale)
+      if let cached = $0[cacheKey] {
+        return cached
+      }
+      let set = loadStrings(bundle: bundle, locale: locale)
+      if let set {
+        $0[cacheKey] = set
+      }
+      return set
     }
-    let set = loadStrings(bundle: bundle, locale: locale)
-    if let set {
-      stringsCache[locale] = set
-    }
-    return set
   }
 
   private nonisolated func loadStrings(bundle: Bundle, locale: Locale) -> StringsSet? {
