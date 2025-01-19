@@ -13,6 +13,13 @@ struct ImageTests {
     assertSnapshot(of: root, as: .html)
   }
 
+  @Test func renderHTMLWithSource() throws {
+    let root = Email {
+      Image(.logo)
+    }
+    assertSnapshot(of: root, as: .html)
+  }
+
   @Test func renderHTMLWithFixedSize() throws {
     let root = Image(url)
       .frame(width: 500, height: 200)
@@ -31,4 +38,22 @@ struct ImageTests {
       .scaledToFill()
     assertSnapshot(of: root, as: .html)
   }
+}
+
+extension Image.Source {
+
+  fileprivate static let logo = Image.Source(
+    defaultURL: "https://static.qualtive.io/notifier/logo_2x.png?v2",
+    alternatives: [
+      "1x": "https://static.qualtive.io/notifier/logo.png?v2",
+      "2x": "https://static.qualtive.io/notifier/logo_2x.png?v2",
+      "3x": "https://static.qualtive.io/notifier/logo_3x.png?v2",
+    ],
+    darkURL: "https://static.qualtive.io/notifier/logo-dark_2x.png?v2",
+    darkAlternatives: [
+      "1x": "https://static.qualtive.io/notifier/logo-dark.png?v2",
+      "2x": "https://static.qualtive.io/notifier/logo-dark_2x.png?v2",
+      "3x": "https://static.qualtive.io/notifier/logo-dark_3x.png?v2",
+    ]
+  )
 }
