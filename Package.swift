@@ -13,7 +13,7 @@ let package = Package(
     .library(name: "SwiftEmailTesting", targets: ["SwiftEmailTesting"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.16.0"),
+    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.17.7"),
     .package(url: "https://github.com/apple/swift-crypto.git", from: "3.0.0"),
   ],
   targets: [
