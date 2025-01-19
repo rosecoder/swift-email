@@ -278,22 +278,24 @@ extension LayoutView: PrimitiveView {
     var context = context
     context.textSeparator = properties.textSeparator
 
+    let environmentValues = EnvironmentValues.current
+
     let backgroundStyle =
-      context.renderedBackgroundStyle == context.environmentValues.backgroundStyle
-      ? nil : context.environmentValues.backgroundStyle
-    context.renderedBackgroundStyle = context.environmentValues.backgroundStyle
+      context.renderedBackgroundStyle == environmentValues.backgroundStyle
+      ? nil : environmentValues.backgroundStyle
+    context.renderedBackgroundStyle = environmentValues.backgroundStyle
 
     let cornerRadius =
-      context.renderedCornerRadius == context.environmentValues.cornerRadius
-      ? nil : context.environmentValues.cornerRadius
-    context.renderedCornerRadius = context.environmentValues.cornerRadius
+      context.renderedCornerRadius == environmentValues.cornerRadius
+      ? nil : environmentValues.cornerRadius
+    context.renderedCornerRadius = environmentValues.cornerRadius
 
     let borderStyle =
-      context.renderedBorderStyle == context.environmentValues.borderStyle
-      ? nil : context.environmentValues.borderStyle
-    context.renderedBorderStyle = context.environmentValues.borderStyle
+      context.renderedBorderStyle == environmentValues.borderStyle
+      ? nil : environmentValues.borderStyle
+    context.renderedBorderStyle = environmentValues.borderStyle
 
-    let classNames = context.environmentValues.classNames.subtracting(context.renderedClassName)
+    let classNames = environmentValues.classNames.subtracting(context.renderedClassName)
     classNames.forEach { context.renderedClassName.insert($0) }
 
     return body(

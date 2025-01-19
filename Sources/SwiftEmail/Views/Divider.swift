@@ -33,7 +33,7 @@ extension Divider: PrimitiveView {
             tag: "hr",
             attributes: [
               "style": "border:0;border-top:1px solid "
-                + style.renderCSSValue(environmentValues: context.environmentValues),
+                + style.renderCSSValue(environmentValues: .current),
               "class": className.renderCSS(options: options),
             ]
           )
@@ -47,7 +47,7 @@ extension Divider: PrimitiveView {
             tag: "hr",
             attributes: [
               "style": "border:0;border-top:1px solid "
-                + style.renderCSSValue(environmentValues: context.environmentValues)
+                + style.renderCSSValue(environmentValues: .current)
             ]))
       }
 

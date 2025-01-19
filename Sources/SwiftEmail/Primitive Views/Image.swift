@@ -35,9 +35,14 @@ extension Image: PrimitiveView {
         value: "none",
         selector: .className("_d")
       )
+      context.globalStyle.insert(
+        key: "display",
+        value: "unset",
+        selector: .className("_d", colorScheme: .dark)
+      )
     }
 
-    let borderStyle = context.environmentValues.borderStyle
+    let borderStyle = EnvironmentValues.current.borderStyle
     let needsRenderBorderStyle = context.renderedBorderStyle != borderStyle
 
     return _Image(
@@ -45,7 +50,7 @@ extension Image: PrimitiveView {
       idealWidth: idealWidth,
       idealHeight: idealHeight,
       borderStyle: needsRenderBorderStyle ? borderStyle : nil,
-      environmentValues: context.environmentValues
+      environmentValues: .current
     ).render(options: options, context: context)
   }
 

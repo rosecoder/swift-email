@@ -28,31 +28,32 @@ extension Text: PrimitiveView {
 
   func _render(options: RenderOptions, context: RenderContext) -> RenderResult {
     var context = context
+    let environmentValues = EnvironmentValues.current
 
-    let font = context.environmentValues.font
+    let font = environmentValues.font
     let needsRenderFont = context.renderedFont != font
     context.renderedFont = font
 
-    let backgroundStyle = context.environmentValues.backgroundStyle
+    let backgroundStyle = environmentValues.backgroundStyle
     let needsRenderBackgroundStyle = context.renderedBackgroundStyle != backgroundStyle
     context.renderedBackgroundStyle = backgroundStyle
 
-    let foregroundStyle = context.environmentValues.foregroundStyle
+    let foregroundStyle = environmentValues.foregroundStyle
     let needsRenderForegroundStyle = context.renderedForegroundStyle != foregroundStyle
     context.renderedForegroundStyle = foregroundStyle
 
-    let cornerRadius = context.environmentValues.cornerRadius
+    let cornerRadius = environmentValues.cornerRadius
     let needsRenderCornerRadius = context.renderedCornerRadius != cornerRadius
     context.renderedCornerRadius = cornerRadius
 
-    let borderStyle = context.environmentValues.borderStyle
+    let borderStyle = environmentValues.borderStyle
     let needsRenderBorderStyle = context.renderedBorderStyle != borderStyle
     context.renderedBorderStyle = borderStyle
 
-    let classNames = context.environmentValues.classNames.subtracting(context.renderedClassName)
+    let classNames = environmentValues.classNames.subtracting(context.renderedClassName)
     classNames.forEach { context.renderedClassName.insert($0) }
 
-    let underline = context.environmentValues.underline
+    let underline = environmentValues.underline
     let needsRenderUnderline = context.renderedUnderline != underline
     context.renderedUnderline = underline
 
@@ -60,12 +61,12 @@ extension Text: PrimitiveView {
     if needsRenderBackgroundStyle {
       if !style.isEmpty { style += ";" }
       style +=
-        "background:" + backgroundStyle.renderCSSValue(environmentValues: context.environmentValues)
+        "background:" + backgroundStyle.renderCSSValue(environmentValues: environmentValues)
     }
     if needsRenderForegroundStyle {
       if !style.isEmpty { style += ";" }
       style +=
-        "color:" + foregroundStyle.renderCSSValue(environmentValues: context.environmentValues)
+        "color:" + foregroundStyle.renderCSSValue(environmentValues: environmentValues)
     }
     if needsRenderCornerRadius {
       if !style.isEmpty { style += ";" }
@@ -73,7 +74,7 @@ extension Text: PrimitiveView {
     }
     if needsRenderBorderStyle {
       if !style.isEmpty { style += ";" }
-      style += "border:" + borderStyle.renderCSSValue(environmentValues: context.environmentValues)
+      style += "border:" + borderStyle.renderCSSValue(environmentValues: environmentValues)
     }
     if needsRenderUnderline {
       if !style.isEmpty { style += ";" }
@@ -117,9 +118,10 @@ extension Text: PrimitiveView {
     options: RenderOptions,
     context: RenderContext
   ) -> some View {
-    let font = context.environmentValues.font
+    let environmentValues = EnvironmentValues.current
+    let font = environmentValues.font
     let size: String = "\(font.size)px"
-    let weight: String = font.weight.renderCSSValue(environmentValues: context.environmentValues)
+    let weight: String = font.weight.renderCSSValue(environmentValues: environmentValues)
     let name: String = font.name
     let isBold = font.weight.isBold
     let isItalic = font.isItalic
@@ -156,7 +158,7 @@ extension Text: PrimitiveView {
       return string
     case .localized(let key, let bundle):
       return LocalizedStringsService.shared.translated(
-        key: key, bundle: bundle ?? .main, locale: context.environmentValues.locale)
+        key: key, bundle: bundle ?? .main, locale: EnvironmentValues.current.locale)
     }
   }
 }

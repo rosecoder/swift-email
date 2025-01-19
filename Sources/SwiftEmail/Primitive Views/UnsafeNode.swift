@@ -36,7 +36,7 @@ extension UnsafeNode: PrimitiveView {
     case .closed(let tag, var attributes):
       let tag = String(describing: tag)
       var context = context
-      if options.format == .pretty, let debugTag = context.environmentValues.tag,
+      if options.format == .pretty, let debugTag = EnvironmentValues.current.tag,
         context.renderedTag != debugTag
       {
         attributes.values["data-tag"] = String(describing: debugTag)
@@ -53,7 +53,7 @@ extension UnsafeNode: PrimitiveView {
     case .content(let tag, var attributes, let content):
       let tag = String(describing: tag)
       var context = context
-      if options.format == .pretty, let debugTag = context.environmentValues.tag,
+      if options.format == .pretty, let debugTag = EnvironmentValues.current.tag,
         context.renderedTag != debugTag
       {
         attributes.values["data-tag"] = String(describing: debugTag)

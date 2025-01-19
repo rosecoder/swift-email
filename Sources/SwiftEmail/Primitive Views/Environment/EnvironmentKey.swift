@@ -1,13 +1,13 @@
 public protocol EnvironmentKey {
 
-    associatedtype Value: Sendable
+  associatedtype Value: Sendable
 
-    static var defaultValue: Value { get }
+  static var defaultValue: Value { get }
 }
 
 extension EnvironmentKey {
 
-    static var rawValue: String {
-        String(describing: self)
-    }
+  static var rawValue: String {
+    String(describing: self)
+  }
 }

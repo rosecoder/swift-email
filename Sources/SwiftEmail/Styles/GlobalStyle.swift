@@ -54,45 +54,24 @@ extension GlobalStyle: PrimitiveView {
     UnsafeNode(tag: "style") {
       UnsafePlainText(".ExternalClass {width:100%;}")
 
-      do {
-        let selectors = selectors.filter { $0.key.colorScheme == nil }
-        switch options.format {
-        case .compact:
-          Self.compact(selectors: selectors, options: options, context: context)
-        case .pretty:
-          Self.pretty(selectors: selectors, options: options, context: context)
-        }
-      }
-
-      ForEach(ColorScheme.allCases) { colorScheme in
-        let alternativeContext = {
-          var context = context
-          context.environmentValues.colorScheme = colorScheme
-          context.indentationLevel += 1
-          return context
-        }()
-        let selectorKeysHavingAlternative = Self.selectorKeysHavingAlternative(
-          selectors: selectors,
-          normal: context.environmentValues,
-          alternative: alternativeContext.environmentValues
-        )
-        let selectors = selectors.filter { selectorKeysHavingAlternative.contains($0.key) }
-        if !selectors.isEmpty {
-          UnsafePlainText("@media (prefers-color-scheme: \(colorScheme.renderCSS())) {")
-          switch options.format {
-          case .compact:
-            Self.compact(selectors: selectors, options: options, context: alternativeContext)
-          case .pretty:
-            Self.pretty(selectors: selectors, options: options, context: alternativeContext)
-          }
-          UnsafePlainText("}")
-        }
-      }
+      Self.styleNodes(
+        selectors: selectors.filter { $0.key.colorScheme == nil },
+        options: options,
+        context: context,
+        environmentValues: .current
+      )
+      Self.mediaStyleNodes(
+        selectors: selectors,
+        options: options,
+        context: context
+      )
     }
   }
 
   private static func selectorKeysHavingAlternative(
-    selectors: [CSSSelector: Styles], normal: EnvironmentValues, alternative: EnvironmentValues
+    selectors: [CSSSelector: Styles],
+    normal: EnvironmentValues,
+    alternative: EnvironmentValues
   ) -> Set<CSSSelector> {
     var keys = Set<CSSSelector>()
     for (key, value) in selectors {
@@ -111,26 +90,91 @@ extension GlobalStyle: PrimitiveView {
     return keys
   }
 
+  @ViewBuilder
+  private static func mediaStyleNodes(
+    selectors allSelectors: [CSSSelector: Styles],
+    options: RenderOptions,
+    context: RenderContext
+  ) -> some View {
+    ForEach(ColorScheme.allCases) { colorScheme in
+      let (alternativeContext, alternativeEnvironmentValues): (RenderContext, EnvironmentValues) =
+        {
+          var context = context
+          context.indentationLevel += 1
+          var environmentValues = EnvironmentValues.current
+          environmentValues.colorScheme = colorScheme
+          return (context, environmentValues)
+        }()
+      let selectorKeysHavingAlternative = Self.selectorKeysHavingAlternative(
+        selectors: allSelectors,
+        normal: .current,
+        alternative: alternativeEnvironmentValues
+      )
+      let selectors = allSelectors.filter { selectorKeysHavingAlternative.contains($0.key) }
+      if !selectors.isEmpty {
+        UnsafePlainText("@media (prefers-color-scheme: \(colorScheme.renderCSS())) {")
+        Self.styleNodes(
+          selectors: selectors,
+          options: options,
+          context: alternativeContext,
+          environmentValues: alternativeEnvironmentValues
+        )
+        UnsafePlainText("}")
+      }
+    }
+  }
+
+  @ViewBuilder
+  private static func styleNodes(
+    selectors: [CSSSelector: Styles],
+    options: RenderOptions,
+    context: RenderContext,
+    environmentValues: EnvironmentValues
+  ) -> some View {
+    switch options.format {
+    case .compact:
+      Self.compact(
+        selectors: selectors,
+        options: options,
+        context: context,
+        environmentValues: environmentValues
+      )
+    case .pretty:
+      Self.pretty(
+        selectors: selectors,
+        options: options,
+        context: context,
+        environmentValues: environmentValues
+      )
+    }
+  }
+
   private static func compact(
-    selectors: [CSSSelector: Styles], options: RenderOptions, context: RenderContext
+    selectors: [CSSSelector: Styles],
+    options: RenderOptions,
+    context: RenderContext,
+    environmentValues: EnvironmentValues
   ) -> some View {
     ForEach(Array(selectors.keys)) { selector in
       UnsafePlainText(
         selector.renderCSS(options: options) + "{"
           + (selectors[selector]!.renderCSS(
-            environmentValues: context.environmentValues, isImportant: true)) + "}")
+            environmentValues: environmentValues, isImportant: true)) + "}")
     }
   }
 
   private static func pretty(
-    selectors: [CSSSelector: Styles], options: RenderOptions, context: RenderContext
+    selectors: [CSSSelector: Styles],
+    options: RenderOptions,
+    context: RenderContext,
+    environmentValues: EnvironmentValues
   ) -> some View {
     ForEach(Array(selectors.keys).sorted()) { selector in
       let properties =
         selectors[selector]!.properties
         .map {
           context.indentation(options: options) + options.indent + options.indent + $0 + ": "
-            + ($1.renderCSSValue(environmentValues: context.environmentValues)) + " !important"
+            + ($1.renderCSSValue(environmentValues: environmentValues)) + " !important"
         }
         .sorted()
         .joined(separator: ";\n") + ";"

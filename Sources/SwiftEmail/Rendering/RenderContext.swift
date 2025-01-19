@@ -1,8 +1,8 @@
 struct RenderContext {
 
+  let renderOptions: RenderOptions
   let globalStyle = GlobalStyle()
   var indentationLevel: UInt16 = 0
-  var environmentValues: EnvironmentValues = .init()
 
   var renderedClassName = ClassNames()
   var renderedFont: Font = EnvironmentValues.default.font

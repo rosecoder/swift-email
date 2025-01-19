@@ -43,10 +43,11 @@ extension Body: PrimitiveView {
       selector: .element("body", colorScheme: .dark)
     )
 
+    let environmentValues = EnvironmentValues.current
     var context = context
-    context.renderedFont = context.environmentValues.font
-    context.renderedBackgroundStyle = context.environmentValues.backgroundStyle
-    context.renderedForegroundStyle = context.environmentValues.foregroundStyle
-    return content.render(options: options, context: context)
+    context.renderedFont = environmentValues.font
+    context.renderedBackgroundStyle = environmentValues.backgroundStyle
+    context.renderedForegroundStyle = environmentValues.foregroundStyle
+    return body.render(options: options, context: context)
   }
 }

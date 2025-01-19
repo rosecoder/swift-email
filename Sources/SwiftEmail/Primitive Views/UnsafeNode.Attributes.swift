@@ -18,7 +18,7 @@ extension UnsafeNode {
 
       let mapped =
         values
-        .map { $0 + "=\"" + ($1.renderValue(environmentValues: context.environmentValues)) + "\"" }
+        .map { $0 + "=\"" + ($1.renderValue(environmentValues: .current)) + "\"" }
 
       switch options.format {
       case .compact:
