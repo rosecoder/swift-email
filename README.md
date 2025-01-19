@@ -15,13 +15,13 @@ Here's a simple example of creating an HTML email:
 ```swift
 let email = Email {
     Text("Hello, world!")
-    
+
     Divider()
-    
+
     HStack {
-        Text("This is an example of an HTML email built with SwiftMailBuilder.")
+        Text("This is an example of an HTML email built with swift-email.")
             .font(.headline)
-            
+
         Image(.logo)
     }
 }
@@ -34,4 +34,3 @@ let plainText = render.text
 ## Contributing
 
 As this is an early proof of concept, contributions, ideas, and feedback are highly welcomed. Please feel free to fork the repository, make your changes, and submit a pull request.
-
