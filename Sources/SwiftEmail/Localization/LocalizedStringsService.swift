@@ -1,7 +1,10 @@
 import Foundation
+import Logging
 import Synchronization
 
 final class LocalizedStringsService: Sendable {
+
+  let logger = Logger(label: "email-localization")
 
   static let shared = LocalizedStringsService()
 
@@ -18,11 +21,14 @@ final class LocalizedStringsService: Sendable {
     }
 
     guard let strings = getStrings(bundle: bundle, locale: locale) else {
-      // TODO: Add logging
+      logger.error(
+        "Localized strings not found for locale \(locale.identifier) in bundle \(bundle.description) trying to translate key \(key.rawValue)."
+      )
       return fallback
     }
     guard let translated = strings[key.rawValue] else {
-      // TODO: Add logging
+      logger.error(
+        "Localized string not found for key \"\(key.rawValue)\" in bundle \(bundle.description).")
       return fallback
     }
     if key.interpolationValues.isEmpty {
