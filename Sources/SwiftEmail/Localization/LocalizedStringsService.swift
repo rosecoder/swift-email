@@ -12,7 +12,7 @@ final class LocalizedStringsService: Sendable {
   func translated(key: LocalizedStringKey, bundle: Bundle, locale: Locale) -> String {
     var fallback: String {
       if locale == defaultLocale {
-        return key.rawValue
+        return format(translated: key.rawValue, key: key)
       }
       return translated(key: key, bundle: bundle, locale: defaultLocale)
     }
@@ -25,6 +25,13 @@ final class LocalizedStringsService: Sendable {
       // TODO: Add logging
       return fallback
     }
+    if key.interpolationValues.isEmpty {
+      return translated
+    }
+    return format(translated: translated, key: key)
+  }
+
+  private func format(translated: String, key: LocalizedStringKey) -> String {
     if key.interpolationValues.isEmpty {
       return translated
     }
