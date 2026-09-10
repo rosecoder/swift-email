@@ -14,7 +14,7 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.17.7"),
-    .package(url: "https://github.com/apple/swift-crypto.git", from: "3.0.0"),
+    .package(url: "https://github.com/apple/swift-crypto.git", "3.0.0" ..< "5.0.0"),
     .package(url: "https://github.com/apple/swift-log.git", from: "1.4.0"),
   ],
   targets: [
